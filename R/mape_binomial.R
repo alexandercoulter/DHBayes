@@ -10,5 +10,10 @@ mape_binomial = function(df, a, b){
   if(b < 0) stop('Prior parameter \'b\' should be non-negative.')
 
   # Calculate MAPE from input:
+  a_post = a + sum(df$x)
+  #b_post = b + sum(df$n) - a_post + a
 
+  denom = a + b + sum(df$n) - 2
+  if(denom <= 0) stop('Not enough samples to calculate MAPE using given prior parameters.')
+  return((a_post - 1) / denom)
 }
