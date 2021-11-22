@@ -15,5 +15,7 @@ mape_binomial = function(df, a, b){
 
   denom = a + b + sum(df$n) - 2
   if(denom <= 0) stop('Not enough samples to calculate MAPE using given prior parameters.')
-  return((a_post - 1) / denom)
+
+  p_mape = min(max((a_post - 1) / denom, 0), 1)
+  return(p_mape)
 }
