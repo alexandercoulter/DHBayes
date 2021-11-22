@@ -5,4 +5,6 @@ mle_binomial = function(df){
   if(!all(c('n', 'x') %in% names(df))) stop('Object \'df\' must contain list elements (or data.frame columns) named \'n\' and \'x\', respectively.')
   if(length(df$n) != length(df$x)) stop('List elements \'n\' and \'x\' are not of same length.')
 
+  # Calculate MLE from input:
+  return(sum(df$x) / sum(df$n))
 }
