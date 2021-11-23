@@ -1,19 +1,13 @@
-empb_beta_binomial = function(df, groupIDs, eta = 0.1, tol = 1e-5){
+empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'n', 'x', and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
   if(!all(c('n', 'x', 'g') %in% names(df))) stop('Object \'df\' must contain list elements (or data.frame columns) named \'n\' and \'x\', respectively.')
   if((length(df$n) != length(df$x)) | (length(df$n) != length(df$g))) stop('List elements are not of same length.')
 
-  # Object 'groupIDs' should be a character vector which contains at least as many unique elements as in 'df$g'.  So:
-  ## Check that 'groupIDs' is character type.
-  if(typeof(groupIDs) != 'character') stop('Object \'groupIDs\' should be character vector.')
-  ## Check  that each element of 'df$g' is contained in 'groupIDs':
-  if(!all(df$g %in% groupIDs)) stop('Data object \'df\' contains a group ID not contained in \'groupIDs\' vector.')
-
   ####################################################################
   # Calculate parameters, starting points for optimizer:
-  ug = unique(groupIDs)
+  ug = unique(df$g)
   Lg = length(ug)
   Ng = Sg = Tg = rep(0, length(ug))
   for(j in 1:Lg){
@@ -21,7 +15,10 @@ empb_beta_binomial = function(df, groupIDs, eta = 0.1, tol = 1e-5){
     Ng[j] = sum(df$n[df$g == ug[j]])
     Tg[j] = Ng[j] - Sg[j]
   }
-  Lg = sum(as.numeric(Ng > 0))
+
+  # Exit if any groups have zero sample size:
+  if(any(Ng == 0)) stop('Some groups have zero sample size.')
+
   STg = cbind(Sg, Tg)
   ab_0 = c(-1, -1)
   ab = c(1, 1)
