@@ -15,12 +15,13 @@ empb_beta_binomial = function(df, groupIDs){
   # Calculate parameters, starting points for optimizer:
   ug = unique(groupIDs)
   Lg = length(ug)
-  Ng = Sj = Tj = rep(0, length(ug))
+  Ng = Sg = Tg = rep(0, length(ug))
   for(j in 1:Lg){
     Sg[j] = sum(df$x[df$g == ug[j]])
     Ng[j] = sum(df$n[df$g == ug[j]])
     Tg[j] = Ng[j] - Sg[j]
   }
+  STg = cbind(Sg, Tg)
   ab_0 = c(1, 1)
   ab = c(-1, -1)
 
@@ -40,17 +41,21 @@ empb_beta_binomial = function(df, groupIDs){
     ab_0 = ab
 
     # Calculate Score vector:
+    Score = Lg * (digamma(sum(ab_0)) - digamma(ab_0)) + colSums(digamma(ab_0 + STg) - digamma(sum(ab_0) + Ng))
 
     # Calculate Hessian vector:
+    Hessian[ , ] = g * trigamma(sum(ab_0)) - sum(trigamma(sum(ab_0) + Ng))
+    Hessian[c(1, 4)] = Hessian[c(1, 4)] - g * trigamma(ab_0) + colSums(trigamma(ab_0 + STg))
 
     # Calculate step:
+    Step = solve(Hessian, Score)
 
     # Cap step at proportion of ab_0:
+    Step = pmin(Step, 0.75 * ab_0)
 
     # Update ab:
+    ab = ab_0 - Step
 
   }
   return(ab)
 }
-
-
