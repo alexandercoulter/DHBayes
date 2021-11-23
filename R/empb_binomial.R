@@ -1,4 +1,4 @@
-empb_beta_binomial = function(df, groupIDs){
+empb_beta_binomial = function(df, groupIDs, eta = 0.1, tol = 1e-5){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'n', 'x', and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -21,9 +21,10 @@ empb_beta_binomial = function(df, groupIDs){
     Ng[j] = sum(df$n[df$g == ug[j]])
     Tg[j] = Ng[j] - Sg[j]
   }
+  Lg = sum(as.numeric(Ng > 0))
   STg = cbind(Sg, Tg)
-  ab_0 = c(1, 1)
-  ab = c(-1, -1)
+  ab_0 = c(-1, -1)
+  ab = c(1, 1)
 
   # If data (df$x) are all zeros, then return(0, mean(Ng)):
   if(sum(Sg) == 0) return(c(0, mean(Ng)))
@@ -36,26 +37,26 @@ empb_beta_binomial = function(df, groupIDs){
   # Initialize parameter vectors for updating in loop:
   Score = rep(NA, 2)
   Hessian = matrix(NA, 2, 2)
+  Step = 10 * c(tol, tol)
 
-  while(!all(ab_0 == ab)){
-    ab_0 = ab
+  while(sum(abs(Step)) > tol){
 
     # Calculate Score vector:
-    Score = Lg * (digamma(sum(ab_0)) - digamma(ab_0)) + colSums(digamma(ab_0 + STg) - digamma(sum(ab_0) + Ng))
+    Score = Lg * (digamma(sum(ab)) - digamma(ab)) + colSums(digamma(ab + STg) - digamma(sum(ab) + Ng))
 
     # Calculate Hessian vector:
-    Hessian[ , ] = g * trigamma(sum(ab_0)) - sum(trigamma(sum(ab_0) + Ng))
-    Hessian[c(1, 4)] = Hessian[c(1, 4)] - g * trigamma(ab_0) + colSums(trigamma(ab_0 + STg))
+    Hessian[ , ] = Lg * trigamma(sum(ab)) - sum(trigamma(sum(ab) + Ng))
+    Hessian[c(1, 4)] = Hessian[c(1, 4)] - Lg * trigamma(ab) + colSums(trigamma(ab + STg))
 
     # Calculate step:
-    Step = solve(Hessian, Score)
+    Step = eta * solve(Hessian, Score)
 
     # Cap step at proportion of ab_0:
-    Step = pmin(Step, 0.75 * ab_0)
+    Step = pmin(Step, 0.9 * ab)
 
     # Update ab:
-    ab = ab_0 - Step
-
+    ab = ab - Step
+    print(sum(abs(Step)))
   }
   return(ab)
 }
