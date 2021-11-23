@@ -47,12 +47,12 @@ empb_binomial = function(df){
     # Calculate step:
     Step = solve(Hessian, Score)
 
-    # Cap step size to 1/10 of distance from edge, to prevent over-shooting:
-
+    # Cap step size to some fraction of distance from edge, to prevent over-shooting:
+    # Taking fraction to be 0.75:
+    Step = pmin(Step, 0.75 * ab_0)
 
     # Take the step:
     ab = ab_0 - Step
   }
   return(ab)
 }
-
