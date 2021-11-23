@@ -10,6 +10,7 @@ empb_binomial = function(df){
   P = df$x / df$n
   S = sum(df$x)
   N = sum(df$n)
+  ST = c(S, N - S)
 
   # If data (df$x) are all zeros, then return(0, N):
    if(S == 0) return(list('a' = 0, 'b' = N))
@@ -21,5 +22,37 @@ empb_binomial = function(df){
   a_start = mP * (mP * (1 - mP) / vP - 1)
   b_start = a_start / mP * (1 - mP)
 
-  return(p_mape)
+  ####################################################################
+  # Run hard-capped Newton's method algorithm:
+
+  # Initialize parameter vectors for updating in loop:
+  ab_0 = c(-1, -1)
+  ab = c(a_start, b_start)
+
+  # Initialize score vector, Hessian matrix:
+  Score = numeric(2)
+  Hessian = matrix(NA, 2, 2)
+
+  # Implement loop where exit condition is equality:
+  while(!all(ab_0 == ab)){
+    ab_0 = ab
+
+    # Calculate score vector components:
+    Score = digamma(ab_0 + ST) + digamma(sum(ab_0)) - digamma(sum(ab_0) + N) - digamma(ab_0)
+
+    # Calculate Hessian matrix components:
+    Hessian[1:2, 1:2] = trigamma(sum(ab_0)) - trigamma(sum(ab_0) + N)
+    Hessian[c(1, 4)] = Hessian[c(1, 4)] + trigamma(ab_0 + ST) - trigamma(ab_0)
+
+    # Calculate step:
+    Step = solve(Hessian, Score)
+
+    # Cap step size to 1/10 of distance from edge, to prevent over-shooting:
+
+
+    # Take the step:
+    ab = ab_0 - Step
+  }
+  return(ab)
 }
+
