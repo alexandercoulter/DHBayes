@@ -34,7 +34,7 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5){
   # Initialize parameter vectors for updating in loop:
   Score = rep(NA, 2)
   Hessian = matrix(NA, 2, 2)
-  Step = 10 * c(tol, tol)
+  Step = c(tol, tol)
 
   while(sum(abs(Step)) > tol){
 
@@ -53,7 +53,6 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5){
 
     # Update ab:
     ab = ab - Step
-    print(sum(abs(Step)))
   }
   return(ab)
 }
