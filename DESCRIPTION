@@ -1,10 +1,10 @@
 Package: DHBayes
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Bayesian Hierarchical Sampler for Discrete (Binomial, Negative-Binomial, Poisson) Data
+Version: 0.0.1
 Authors@R: 
     person("Alexander", "Coulter", , "coultera@stat.tamu.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: This package implements maximum likelihood estimation (MLE), maximum a posteriori estimation (MAPE), empirical Bayesian fitting, and full hierarchical sampling algorithms for data models handling various discrete group-conditional distributions.  Supported data types are binomially distributed data, with beta conjugate prior setups; negative-binomially distributed data, with beta conjugate prior setups; and Poisson distributed data, with gamma prior setups.  Options are available for user-specified hyperparameter values, or fitting them through empirical Bayesian methods.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
