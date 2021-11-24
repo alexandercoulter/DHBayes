@@ -1,3 +1,13 @@
+#' mape_binomial
+#'
+#' @param df
+#' @param a
+#' @param b
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mape_binomial = function(df, a, b){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'n' and 'x'.  To that end:
 

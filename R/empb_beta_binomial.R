@@ -1,3 +1,13 @@
+#' empb_beta_binomial
+#'
+#' @param df
+#' @param eta
+#' @param tol
+#'
+#' @return
+#' @export
+#'
+#' @examples
 empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'n', 'x', and 'g'.  To that end:
 

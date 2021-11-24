@@ -1,3 +1,11 @@
+#' mle_binomial
+#'
+#' @param df
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mle_binomial = function(df){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'n' and 'x'.  To that end:
 
