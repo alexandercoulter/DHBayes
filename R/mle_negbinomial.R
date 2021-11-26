@@ -18,7 +18,7 @@ mle_negbinomial = function(df, eta = 1, tol = 0.0001){
     f. = M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r))
 
     # Calculate second derivative for Newton's step:
-    f.. = -M * trigamma(r) + sum(trigamma(df$x + r))
+    f.. = sum(trigamma(df$x + r)) - M * trigamma(r)
 
     # Calculate step for 'r', capping at some proportion of existing 'r' value to not overshoot into negatives:
     rstep = min(0.5 * r, f. / f..)
