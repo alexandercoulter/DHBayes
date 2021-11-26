@@ -7,26 +7,32 @@ mle_negbinomial = function(df, eta = 1, tol = 0.0001){
   # Calculate MLE from input:
   M = length(df$x)
   Sx = sum(df$x)
-  MSx = M / Sx
+  ro = c(1, M / Sx)
 
-  r = 1
-  o = MSx
-  rstep = tol + 1
-  while(abs(rstep) > tol){
-    # Calculate derivative for Newton's step:
-    f. = M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r))
+  Step = c(tol, tol)
+  Score = rep(NA, 2)
+  Hessian = matrix(NA, 2, 2)
 
-    # Calculate second derivative for Newton's step:
-    f.. = sum(trigamma(df$x + r)) - M * trigamma(r)
+  while(sum(abs(Step)) > tol){
+    # Calculate Score vector for Newton's step:
+    r = ro[1]
+    o = ro[2]
 
-    # Calculate step for 'r', capping at some proportion of existing 'r' value to not overshoot into negatives:
-    rstep = min(0.5 * r, f. / f..)
+    Score = c(M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r)),
+              sum(r / o - (df$x + r) / (1 + o)))
+
+    # Calculate Hessian Matrix for Newton's step:
+    Hessian[1] = sum(trigamma(df$x + r)) - M * trigamma(r)
+    Hessian[c(2, 3)] = M / (o * (1 + o))
+    Hessian[4] = sum((df$x + r) / (1 + o)^2 - r / o^2)
+
+    # Calculate step for 'ro', capping at some proportion of existing 'ro' value to not overshoot into negatives:
+    Step = pmin(0.5 * ro, solve(Hessian, Score))
 
     # Take damped step:
-    r = r - eta * rstep
+    ro = ro - eta * Step
 
-    # Calculate maximizing 'o':
-    o = r * MSx
+    #print(c(ro, sum(abs(Step))))
   }
-  return(c(r, o / (1 + o)))
+  return(c(ro[1], ro[2] / (1 + ro[2])))
 }
