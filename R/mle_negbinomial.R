@@ -30,5 +30,5 @@ mle_negbinomial = function(df, eta = 1, tol = 0.0001){
 
     o = r * MSx
   }
-  return(c(r, o/(1+o)))
+  return(c(r, o / (1 + o)))
 }
