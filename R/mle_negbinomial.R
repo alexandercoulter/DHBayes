@@ -13,7 +13,6 @@ mle_negbinomial = function(df, eta = 1, tol = 0.0001){
   o = MSx
   rstep = tol + 1
   while(abs(rstep) > tol){
-
     # Calculate derivative for Newton's step:
     f. = M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r))
 
@@ -27,7 +26,6 @@ mle_negbinomial = function(df, eta = 1, tol = 0.0001){
     r = r - eta * rstep
 
     # Calculate maximizing 'o':
-
     o = r * MSx
   }
   return(c(r, o / (1 + o)))
