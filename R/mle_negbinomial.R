@@ -15,10 +15,10 @@ mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 2
   iternum = 0
 
   while((sum(abs(Step)) > tol) & iternum < maxIter){
-    # Calculate Score vector for Newton's step:
     r = ro[1]
     o = ro[2]
 
+    # Calculate Score vector for Newton's step:
     Score = c(M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r)) - lambda,
               sum(r / o - (df$x + r) / (1 + o)))
 
@@ -33,7 +33,6 @@ mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 2
     # Take damped step:
     ro = ro - eta * Step
 
-    #print(c(ro, sum(abs(Step))))
     iternum = iternum + 1
   }
   return(c(ro[1], ro[2] / (1 + ro[2])))
