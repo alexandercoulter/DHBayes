@@ -4,6 +4,18 @@ mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
   if(!('x' %in% names(df))) stop('Object \'df\' must contain list element (or data.frame column) named \'x\'.')
 
+  # Prior parameter r_prior must be positive:
+  if(r_prior <= 0) stop('Object \'r_prior\' must be positive.')
+  # Prior parameter p_prior must be strictly between 0 and 1:
+  if((p_prior <= 0) | (p_prior >= 1)) stop('Object \'p_prior\' must be strictly between zero and one.')
+  # Prior parameter M_prior must be positive:
+  if(M_prior <= 0) stop('Object \'M_prior\' must be positive.')
+
+  # Dampening parameter eta must be positive:
+  if(eta <= 0) stop('Object \'eta\' must be positive.')
+  # Tolerance must be non-negative:
+  if(tol < 0) stop('Object \'tol\' must be non-negative.')
+
   # Set prior mean vector mu, starting point:
   mu = log(c(r_prior, p_prior / (1 - p_prior)))
   ell = mu
