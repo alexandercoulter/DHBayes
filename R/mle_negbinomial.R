@@ -1,3 +1,15 @@
+#' Title
+#'
+#' @param df
+#' @param eta
+#' @param lambda
+#' @param tol
+#' @param maxIter
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 200){
   # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
 
