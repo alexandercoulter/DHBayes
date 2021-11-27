@@ -1,4 +1,4 @@
-mle_negbinomial = function(df, eta = 1, tol = 0.0001, maxIter = 200){
+mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 200){
   # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -19,7 +19,7 @@ mle_negbinomial = function(df, eta = 1, tol = 0.0001, maxIter = 200){
     r = ro[1]
     o = ro[2]
 
-    Score = c(M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r)),
+    Score = c(M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r)) - lambda,
               sum(r / o - (df$x + r) / (1 + o)))
 
     # Calculate Hessian Matrix for Newton's step:
