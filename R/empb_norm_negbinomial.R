@@ -16,12 +16,15 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.00
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
   if(!all(c('x', 'g') %in% names(df))) stop('Object \'df\' must contain list elements (or data.frame columns) named \'x\' and \'g\', respectively.')
-  if((length(df$n) != length(df$x)) | (length(df$n) != length(df$g))) stop('List elements are not of same length.')
+  if(length(df$x) != length(df$g)) stop('List elements are not of same length.')
 
-  # Dampening parameter eta must be positive:
-  if(eta <= 0) stop('Object \'eta\' must be positive.')
+  # Dampening parameters MLEeta, EMPBeta must be positive:
+  if(MLEeta <= 0) stop('Object \'MLEeta\' must be positive.')
+  if(EMPBeta <= 0) stop('Object \'EMPBeta\' must be positive.')
   # Tolerance must be non-negative:
   if(tol < 0) stop('Object \'tol\' must be non-negative.')
+  # Regularization parameter lambda must be non-negative:
+  if(lambda < 0) stop('Object \'lambda\' must be non-negative.')
   # Maximum number of iterations must be positive integer:
   if((maxIter < 1) | ((maxIter %% 1) != 0)) stop('Object \'maxIter\' must be positive integer.')
 
@@ -31,8 +34,9 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.00
 
   # Calculate mu_j's for each group:
   muj = matrix(NA, nrow = G, ncol = 2)
-  for(j in 1:G) muj[j, ] = mle_negbinomial(df = df$'x'[df$'g' == unique.g[j]], eta = MLEeta, lambda = lambda, tol = tol, maxIter = maxIter)
+  for(j in 1:G) muj[j, ] = mle_negbinomial(df = df[df$'g' == unique.g[j], ], eta = MLEeta, lambda = lambda, tol = tol, maxIter = maxIter)
 
+  return(list('muj' = muj, 'groups' = unique.g))
   # Calculate Tau_j's for each group:
   Tauj = array(NA, dim = c(G, 2, 2))
 
