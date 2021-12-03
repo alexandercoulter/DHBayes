@@ -1,0 +1,60 @@
+#' Title
+#'
+#' @param df
+#' @param lambda
+#' @param eta
+#' @param tol
+#' @param maxIter
+#'
+#' @return
+#' @export
+#'
+#' @examples
+empb_norm_negbinomial = function(df, lambda = 0.01, eta = 0.001, tol = 1e-5, maxIter = 100){
+  # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
+
+  if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
+  if(!all(c('x', 'g') %in% names(df))) stop('Object \'df\' must contain list elements (or data.frame columns) named \'x\' and \'g\', respectively.')
+  if((length(df$n) != length(df$x)) | (length(df$n) != length(df$g))) stop('List elements are not of same length.')
+
+  # Dampening parameter eta must be positive:
+  if(eta <= 0) stop('Object \'eta\' must be positive.')
+  # Tolerance must be non-negative:
+  if(tol < 0) stop('Object \'tol\' must be non-negative.')
+
+  # Calculate mu_j's for each group:
+  muj = matrix(NA, nrow = length(unique(df$'g')), ncol = 2)
+
+  # Calculate Tau_j's for each group:
+  Tauj = array(NA, dim = c(nrow(muj), 2, 2))
+
+  # Calculate initial values for mu, Tau:
+  mu  = NULL
+  Tau = NULL
+
+  # Initialize empty objects for WHILE loop:
+  Grad = matrix(NA, 2, 2)
+  Rhoj = array(NA, dim = c(nrow(muj), 2, 2))
+  Aj   = array(NA, dim = c(nrow(muj), 2, 2))
+  iternum = 0
+
+  while((sum(abs(Grad)) > tol) & iternum < maxIter){
+
+    # Prepare calculations for new Tau gradient calculation:
+
+
+    # Calculate Tau gradient:
+    Grad = NULL
+
+    # Take Tau step:
+    Tau = Tau - eta * Grad
+
+    # Calculate new mu:
+    mu = NULL
+
+    iternum = iternum + 1
+    if((det(Grad) < 0) | (det(Grad[1, 1, drop = FALSE]) < 0)) stop("Step isn't positive semi-definite!")
+  }
+
+  return(list('mu' = mu, 'Sigma'  = solve(Tau)))
+}
