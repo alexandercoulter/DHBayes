@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.001, tol = 1e-5, maxIter = 200){
+empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.01, EMPBeta = 0.1, tol = 1e-5, maxIter = 10000){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -49,40 +49,71 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.00
     Tauj[j, 2, 2] = -1 * Tauj[j, 2, 1]
   }
 
-  #return(list('muj' = muj, 'groups' = unique.g))
-  #return(list('Tauj' = Tauj, 'groups' = unique.g))
-
   # Set muj to appropriate log, log-odds scale, instead of r/p from mle_negbinomial:
   muj[, 2] = muj[, 2] / (1 - muj[, 2])
   muj = log(muj)
 
   # Calculate initial values for mu, Tau:
-  mu  = NULL
-  Tau = NULL
+  mu  = colMeans(muj)
+  Tau = diag(2)
 
   # Initialize empty objects for WHILE loop:
-  Grad = matrix(NA, 2, 2)
-  Rhoj = array(NA, dim = c(G, 2, 2))
-  Aj   = array(NA, dim = c(G, 2, 2))
+  Grad  = matrix(tol, 2, 2)
+  Rhoji = array(NA, dim = c(G, 2, 2))
+  Aj    = matrix(NA, nrow = 2, ncol = G)
   iternum = 0
 
+  # Calculate initial objective function value:
+  objective = rep(NA, maxIter + 1)
+  B = 0
+  for(j in 1:G){
+    Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
+    C = Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ]
+    B = B + t(C) %*% Rhoji[j, , ] %*% C
+  }
+  objective[1] = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(apply(Rhoji, 1, det))) + B)
+
+  # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
   while((sum(abs(Grad)) > tol) & iternum < maxIter){
 
     # Prepare calculations for new Tau gradient calculation:
-
+    for(j in 1:G){
+      Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
+      Aj[, j] = Rhoji[j, , ] %*% (Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ])
+    }
 
     # Calculate Tau gradient:
-    Grad = NULL
+    Grad = G / 2 * solve(Tau) - 0.5 * (colSums(Rhoji) + tcrossprod(Aj - mu))
 
     # Take Tau step:
-    Tau = Tau - eta * Grad
+    Tau = Tau + EMPBeta * Grad
 
     # Calculate new mu:
-    mu = NULL
+    B = numeric(2)
+    for(j in 1:G){
+      Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
+      B = B + Rhoji[j, , ] %*% (mj[j] * Tauj[j, , ] %*% muj[j, ])
+    }
+    mu = c(solve(diag(2) - apply(Rhoji, c(2, 3), sum) %*% Tau / G) %*% B) / G
 
+    # Update iteration count to exit loop at maxIter:
     iternum = iternum + 1
-    if((det(Grad) < 0) | (det(Grad[1, 1, drop = FALSE]) < 0)) stop("Step isn't positive semi-definite!")
+
+    # Calculate current objective function value:
+    B = 0
+    for(j in 1:G){
+      C = Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ]
+      B = B + t(C) %*% Rhoji[j, , ] %*% C
+    }
+    objective[iternum + 1] = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(apply(Rhoji, 1, det))) + B)
+
   }
+
+  # Plotting mujs, and suggested normal distribution from mu/Tau:
+
+  #plot(muj[, 1], muj[, 2], pch=16, cex=mj/3)
+  #zz = mvrnorm(1000, mu, solve(Tau))
+  #points(zz[,1], zz[,2], col=rgb(1, 0, 0, 0.5))
 
   return(list('mu' = mu, 'Sigma'  = solve(Tau)))
 }
