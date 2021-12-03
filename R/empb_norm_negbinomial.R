@@ -21,6 +21,8 @@ empb_norm_negbinomial = function(df, lambda = 0.01, eta = 0.001, tol = 1e-5, max
   if(eta <= 0) stop('Object \'eta\' must be positive.')
   # Tolerance must be non-negative:
   if(tol < 0) stop('Object \'tol\' must be non-negative.')
+  # Maximum number of iterations must be positive integer:
+  if((maxIter < 1) | ((maxIter %% 1) != 0)) stop('Object \'maxIter\' must be positive integer.')
 
   # Calculate mu_j's for each group:
   muj = matrix(NA, nrow = length(unique(df$'g')), ncol = 2)

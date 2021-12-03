@@ -15,6 +15,8 @@ mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001
   if(eta <= 0) stop('Object \'eta\' must be positive.')
   # Tolerance must be non-negative:
   if(tol < 0) stop('Object \'tol\' must be non-negative.')
+  # Maximum number of iterations must be positive integer:
+  if((maxIter < 1) | ((maxIter %% 1) != 0)) stop('Object \'maxIter\' must be positive integer.')
 
   # Set prior mean vector mu, starting point:
   mu = log(c(r_prior, p_prior / (1 - p_prior)))
