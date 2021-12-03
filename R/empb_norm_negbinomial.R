@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-empb_norm_negbinomial = function(df, lambda = 0.01, eta = 0.001, tol = 1e-5, maxIter = 100){
+empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.001, tol = 1e-5, maxIter = 200){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -24,11 +24,16 @@ empb_norm_negbinomial = function(df, lambda = 0.01, eta = 0.001, tol = 1e-5, max
   # Maximum number of iterations must be positive integer:
   if((maxIter < 1) | ((maxIter %% 1) != 0)) stop('Object \'maxIter\' must be positive integer.')
 
+  # Pull out unique group IDs:
+  unique.g = unique(df$'g')
+  G = length(unique.g)
+
   # Calculate mu_j's for each group:
-  muj = matrix(NA, nrow = length(unique(df$'g')), ncol = 2)
+  muj = matrix(NA, nrow = G, ncol = 2)
+  for(j in 1:G) muj[j, ] = mle_negbinomial(df = df$'x'[df$'g' == unique.g[j]], eta = MLEeta, lambda = lambda, tol = tol, maxIter = maxIter)
 
   # Calculate Tau_j's for each group:
-  Tauj = array(NA, dim = c(nrow(muj), 2, 2))
+  Tauj = array(NA, dim = c(G, 2, 2))
 
   # Calculate initial values for mu, Tau:
   mu  = NULL
@@ -36,8 +41,8 @@ empb_norm_negbinomial = function(df, lambda = 0.01, eta = 0.001, tol = 1e-5, max
 
   # Initialize empty objects for WHILE loop:
   Grad = matrix(NA, 2, 2)
-  Rhoj = array(NA, dim = c(nrow(muj), 2, 2))
-  Aj   = array(NA, dim = c(nrow(muj), 2, 2))
+  Rhoj = array(NA, dim = c(G, 2, 2))
+  Aj   = array(NA, dim = c(G, 2, 2))
   iternum = 0
 
   while((sum(abs(Grad)) > tol) & iternum < maxIter){
