@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.01, EMPBeta = 0.1, tol = 1e-5, maxIter = 10000){
+empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01, tol = 1e-3, maxIter = 10000){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -54,8 +54,8 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.01, EMPBeta = 0.1
   muj = log(muj)
 
   # Calculate initial values for mu, Tau:
-  mu  = colMeans(muj)
-  Tau = diag(2)
+  mu  = colSums(muj * mj) / sum(mj)
+  Tau = solve(cov(muj))
 
   # Initialize empty objects for WHILE loop:
   Grad  = matrix(tol, 2, 2)
@@ -72,9 +72,11 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.01, EMPBeta = 0.1
     B = B + t(C) %*% Rhoji[j, , ] %*% C
   }
   objective[1] = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(apply(Rhoji, 1, det))) + B)
-
+  err = tol + 1
+  #mu_trace = matrix(NA, nrow = maxIter + 1, ncol = 2)
+  #mu_trace[1, ] = mu
   # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
-  while((sum(abs(Grad)) > tol) & iternum < maxIter){
+  while((abs(err) > tol) & iternum < maxIter){
 
     # Prepare calculations for new Tau gradient calculation:
     for(j in 1:G){
@@ -106,12 +108,15 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.01, EMPBeta = 0.1
       B = B + t(C) %*% Rhoji[j, , ] %*% C
     }
     objective[iternum + 1] = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(apply(Rhoji, 1, det))) + B)
-
+    err = objective[iternum + 1] - objective[iternum]
+    #mu_trace[iternum + 1, ] = mu
+    #print(iternum)
   }
-
+  # plot(mu_trace[, 1], type = 'l', ylim = c(1.7, 1.71), xlim = c(0, 2000))
+  # plot(objective, type = 'l')
   # Plotting mujs, and suggested normal distribution from mu/Tau:
 
-  #plot(muj[, 1], muj[, 2], pch=16, cex=mj/3)
+  #plot(muj[, 1], muj[, 2], pch=16, xlim = c(min(muj[,1])-1, max(muj[,1])+1), ylim = c(min(muj[,2])-1, max(muj[,2])+1))
   #zz = mvrnorm(1000, mu, solve(Tau))
   #points(zz[,1], zz[,2], col=rgb(1, 0, 0, 0.5))
 
