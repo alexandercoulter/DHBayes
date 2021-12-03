@@ -2,9 +2,10 @@
 #'
 #' @param df
 #' @param lambda
-#' @param eta
 #' @param tol
 #' @param maxIter
+#' @param MLEeta
+#' @param EMPBeta
 #'
 #' @return
 #' @export
