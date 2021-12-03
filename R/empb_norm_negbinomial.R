@@ -29,16 +29,32 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.00
   if((maxIter < 1) | ((maxIter %% 1) != 0)) stop('Object \'maxIter\' must be positive integer.')
 
   # Pull out unique group IDs:
-  unique.g = unique(df$'g')
+  unique.g = sort(unique(df$'g'))
   G = length(unique.g)
 
-  # Calculate mu_j's for each group:
+  # Calculate mu_j's, Tau_j's for each group:
   muj = matrix(NA, nrow = G, ncol = 2)
-  for(j in 1:G) muj[j, ] = mle_negbinomial(df = df[df$'g' == unique.g[j], ], eta = MLEeta, lambda = lambda, tol = tol, maxIter = maxIter)
-
-  return(list('muj' = muj, 'groups' = unique.g))
-  # Calculate Tau_j's for each group:
   Tauj = array(NA, dim = c(G, 2, 2))
+  mj = rep(NA, G)
+
+  for(j in 1:G){
+    d = df[df$'g' == unique.g[j], ]
+    mj[j] = nrow(d)
+    muj[j, ] = mle_negbinomial(df = d, eta = MLEeta, lambda = lambda, tol = tol, maxIter = maxIter)
+    r = muj[j, 1]
+    p = muj[j, 2]
+    M = mj[j]
+    Tauj[j, 1, 1] = r * M * (r * trigamma(r) + digamma(r) - log(p)) - r * sum(digamma(d$'x' + r) + r * trigamma(d$'x' + r))
+    Tauj[j, 1, 2] = Tauj[j, 2, 1] = r * (p - 1) * M
+    Tauj[j, 2, 2] = -1 * Tauj[j, 2, 1]
+  }
+
+  #return(list('muj' = muj, 'groups' = unique.g))
+  #return(list('Tauj' = Tauj, 'groups' = unique.g))
+
+  # Set muj to appropriate log, log-odds scale, instead of r/p from mle_negbinomial:
+  muj[, 2] = muj[, 2] / (1 - muj[, 2])
+  muj = log(muj)
 
   # Calculate initial values for mu, Tau:
   mu  = NULL
