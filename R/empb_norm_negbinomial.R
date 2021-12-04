@@ -64,17 +64,15 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
   iternum = 0
 
   # Calculate initial objective function value:
-
   B = 0
   for(j in 1:G){
     Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
     C = Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ]
     B = B + t(C) %*% Rhoji[j, , ] %*% C
   }
-  obj = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(apply(Rhoji, 1, det))) + B)
+  obj = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(Rhoji[, 1, 1] * Rhoji[, 2, 2] - Rhoji[, 1, 2] * Rhoji[, 2, 1])) + B)
   err = tol + 1
-  #mu_trace = matrix(NA, nrow = maxIter + 1, ncol = 2)
-  #mu_trace[1, ] = mu
+
   # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
   while((abs(err) > tol) & iternum < maxIter){
 
@@ -85,7 +83,7 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
     }
 
     # Calculate Tau gradient:
-    Grad = G / 2 * solve(Tau) - 0.5 * (colSums(Rhoji) + tcrossprod(Aj - mu))
+    Grad = 0.5 * (G * solve(Tau) - (colSums(Rhoji) + tcrossprod(Aj - mu)))
 
     # Take Tau step:
     Tau = Tau + EMPBeta * Grad
@@ -96,7 +94,7 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
       Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
       B = B + Rhoji[j, , ] %*% (mj[j] * Tauj[j, , ] %*% muj[j, ])
     }
-    mu = c(solve(diag(2) - apply(Rhoji, c(2, 3), sum) %*% Tau / G) %*% B) / G
+    mu = c(solve(diag(2) - colSums(Rhoji) %*% Tau / G) %*% B) / G
 
     # Update iteration count to exit loop at maxIter:
     iternum = iternum + 1
@@ -108,7 +106,7 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
       B = B + t(C) %*% Rhoji[j, , ] %*% C
     }
     obj_old = obj
-    obj = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(apply(Rhoji, 1, det))) + B)
+    obj = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(Rhoji[, 1, 1] * Rhoji[, 2, 2] - Rhoji[, 1, 2] * Rhoji[, 2, 1])) + B)
 
     # Calculate change in objective function from prior step to current:
     err = obj - obj_old
