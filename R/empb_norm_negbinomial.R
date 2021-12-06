@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01, tol = 1e-3, maxIter = 1000, jitter = FALSE){
+empb_norm_negbinomial = function(df, lambda = 1, MLEeta = 0.001, EMPBeta = 0.001, tol = 0.1, maxIter = 10000, jitter = FALSE){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
