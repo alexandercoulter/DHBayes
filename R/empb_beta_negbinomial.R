@@ -94,6 +94,9 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
     iternum = iternum + 1
 
     # Calculate current objective function value:
+    r = rab[1]
+    a = rab[2]
+    b = rab[3]
     obj_old = obj
     obj = obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - G * lbeta(a, b) - Sm * lgamma(r)
 
@@ -102,6 +105,6 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
 
   }
 
-  return(list('r' = rab[1], 'a' = rab[2], 'b' = rab[3]))
+  return(list('r' = r, 'a' = a, 'b' = b))
 }
 
