@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01, tol = 1e-3, maxIter = 1000){
+empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01, tol = 1e-3, maxIter = 1000, jitter = FALSE){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -53,9 +53,9 @@ empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01,
   muj[, 2] = muj[, 2] / (1 - muj[, 2])
   muj = log(muj)
 
-  # Calculate initial values for mu, Tau:
-  mu  = colSums(muj * mj) / sum(mj)
-  Tau = solve(cov(muj))
+  # Calculate initial values for mu, Tau; if input 'jitter' is TRUE, then add small jitter to data points:
+  mu  = if(jitter) colSums(jitter(muj) * mj) / sum(mj) else colSums(muj * mj) / sum(mj)
+  Tau = if(jitter) solve(cov(jitter(muj))) else solve(cov(muj))
 
   # Initialize empty objects for WHILE loop:
   Grad  = matrix(tol, 2, 2)
