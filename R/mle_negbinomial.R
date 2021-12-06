@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-mle_negbinomial = function(df, eta = 0.1, lambda = 0.01, tol = 0.0001, maxIter = 10000){
+mle_negbinomial = function(df, eta = 0.001, lambda = 0.01, tol = 0.0001, maxIter = 10000){
   # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -19,7 +19,15 @@ mle_negbinomial = function(df, eta = 0.1, lambda = 0.01, tol = 0.0001, maxIter =
   # Calculate MLE from input:
   M = length(df$x)
   Sx = sum(df$x)
-  ell = c(1, 0)
+
+  if((M > 2) & (Sx > 0)){
+    r0 = mean(df$x)^2 / max(var(df$x) - mean(df$x), mean(df$x))
+    p0 = mean(df$x) / var(df$x)
+    if(p0 >= 1) p0 = 0.9
+    ell = c(log(r0), log(p0 / (1 - p0)))
+  } else {
+    ell = c(1, 0)
+  }
 
   Step = c(tol, tol)
   Score = rep(NA, 2)
@@ -32,7 +40,7 @@ mle_negbinomial = function(df, eta = 0.1, lambda = 0.01, tol = 0.0001, maxIter =
     p = o / (1 + o)
 
     # Cannot do Newton's method if Sx == 0 (second derivative does not exist):
-    if(Sx == 0){
+    if((Sx == 0) | (M < 4)){
 
       # Calculate Score vector for step:
       Score = M * c(log(p), r / (o * (1 + o))) - lambda
