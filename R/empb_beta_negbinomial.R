@@ -16,13 +16,13 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
   unique.g = sort(unique(df$'g'))
   G = length(unique.g)
   Sx = mj = rep(NA, G)
+  x = df$'x'
   for(j in 1:G){
-    d = df$'x'[df$'g' == unique.g[j]]
+    d = x[df$'g' == unique.g[j]]
     Sx[j] = sum(d)
     mj[j] = length(d)
   }
   Sm = sum(mj)
-
 
   # Exit if number of groups G is 3 or fewer:
   if(G < 4) stop('Algorithm cannot provide solution for three or fewer groups.')
@@ -30,8 +30,10 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
   # Initialize empty objects for WHILE loop:
   Score  = rep(NA, 3)
   Hessian = matrix(NA, 3, 3)
-  rab = rep(NA, 3)
   iternum = 0
+
+  # Give initial values:
+  rab = c(1, 1, 1)
 
   # Calculate initial objective function value:
   obj = NULL
@@ -39,20 +41,49 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
   # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
   while((abs(err) > tol) & iternum < maxIter){
 
-    # Calculate a', b':
+    r = rab[1]
+    a = rab[2]
+    b = rab[3]
 
+    # Calculate a', b':
+    a. = a + mj * r
+    b. = b + Sx
+
+    # Calculate preparatory values:
+    sum_a_digamma = sum(digamma(a.) - digamma(a. + b.))
+    sum_b_digamma = sum(digamma(b.) - digamma(a. + b.))
+    sum_ma_digamma = sum(mj * (digamma(a.) - digamma(a. + b.)))
+    sum_mb_digamma = sum(mj * (digamma(b.) - digamma(a. + b.)))
+    sum_x_digamma = sum(digamm(x + r))
+    digamma_gaab = g * (digamma(a) - digamma(a + b))
+    digamma_gbab = g * (digamma(b) - digamma(a + b))
+    sum_a_trigamma = sum(trigamma(a.) - trigamma(a. + b.))
+    sum_b_trigamma = sum(trigamma(b.) - trigamma(a. + b.))
+    sum_ma_trigamma = sum(mj^2 * (trigamma(a.) - trigamma(a. + b.)))
+    sum_mb_trigamma = sum(mj^2 * (trigamma(b.) - trigamma(a. + b.)))
+    sum_x_trigamma = sum(trigamm(x + r))
+    trigamma_gaab = g * (trigamma(a) - trigamma(a + b))
+    trigamma_gbab = g * (trigamma(b) - trigamma(a + b))
 
     # Calculate Score vector:
-
+    Score = c(sum_ma_digamma + sum_x_digamma - Sm * digamma(r),
+              sum_a_digamma - digamma_gaab,
+              sum_b_digamma - digamma_gbab)
 
     # Calculate Hessian components:
-
+    H11 = sum_ma_trigamma + sum_x_trigamma - Sm * trigamma(r)
+    H22 = sum_a_trigamma - trigamma_gaab
+    H33 = sum_b_trigamma - trigamma_gbab
+    H12 = sum_ma_trigamma
+    H13 = sum(mj * trigamma(a. + b.))
+    H23 = g * trigamma(a + b) - sum(trigamma(a. + b.))
 
     # Combine Hessian components into Hessian matrix:
-
+    Hessian = matrix(c(H11, H12, H13, H12, H22, H23, H13, H23, H33), 3, 3)
 
     # Take step:
-
+    Step = solve(Hessian, Score)
+    rab = rab - eta * Step
 
     # Update iteration count to exit loop at maxIter:
     iternum = iternum + 1
