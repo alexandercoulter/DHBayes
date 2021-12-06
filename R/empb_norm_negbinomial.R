@@ -32,6 +32,10 @@ empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01,
   unique.g = sort(unique(df$'g'))
   G = length(unique.g)
 
+  # Exit if number of groups G is 1; exit and provide tip for forcing solution is number of groups G is 2:
+  if(G == 1) stop('Algorithm cannot provide solution for one group.')
+  if(G == 2) print('WARNING: algorithm result very unreliable for two groups.')
+
   # Calculate mu_j's, Tau_j's for each group:
   muj = matrix(NA, nrow = G, ncol = 2)
   Tauj = array(NA, dim = c(G, 2, 2))
@@ -54,8 +58,21 @@ empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01,
   muj = log(muj)
 
   # Calculate initial values for mu, Tau; if input 'jitter' is TRUE, then add small jitter to data points:
-  mu  = if(jitter) colSums(jitter(muj) * mj) / sum(mj) else colSums(muj * mj) / sum(mj)
-  Tau = if(jitter) solve(cov(jitter(muj))) else solve(cov(muj))
+  if(jitter){
+    mu = colSums(jitter(muj) * mj) / sum(mj)
+    if(G < 3){
+      Tau = solve(crossprod(jitter(muj)))
+    } else {
+      Tau = solve(cov(jitter(muj)))
+    }
+  } else {
+    mu = colSums(muj * mj) / sum(mj)
+    if(G < 3){
+      Tau = solve(crossprod(muj))
+    } else {
+      Tau = solve(cov(muj))
+    }
+  }
 
   # Initialize empty objects for WHILE loop:
   Grad  = matrix(tol, 2, 2)
