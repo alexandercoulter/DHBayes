@@ -41,7 +41,7 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
   b. = b + Sx
 
   # Calculate initial objective function value:
-  obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - g * lbeta(a, b) - Sm * lgamma(r)
+  obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - G * lbeta(a, b) - Sm * lgamma(r)
 
   # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
   while((abs(err) > tol) & iternum < maxIter){
@@ -59,16 +59,16 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
     sum_b_digamma = sum(digamma(b.) - digamma(a. + b.))
     sum_ma_digamma = sum(mj * (digamma(a.) - digamma(a. + b.)))
     sum_mb_digamma = sum(mj * (digamma(b.) - digamma(a. + b.)))
-    sum_x_digamma = sum(digamm(x + r))
-    digamma_gaab = g * (digamma(a) - digamma(a + b))
-    digamma_gbab = g * (digamma(b) - digamma(a + b))
+    sum_x_digamma = sum(digamma(x + r))
+    digamma_gaab = G * (digamma(a) - digamma(a + b))
+    digamma_gbab = G * (digamma(b) - digamma(a + b))
     sum_a_trigamma = sum(trigamma(a.) - trigamma(a. + b.))
     sum_b_trigamma = sum(trigamma(b.) - trigamma(a. + b.))
     sum_ma_trigamma = sum(mj^2 * (trigamma(a.) - trigamma(a. + b.)))
     sum_mb_trigamma = sum(mj^2 * (trigamma(b.) - trigamma(a. + b.)))
-    sum_x_trigamma = sum(trigamm(x + r))
-    trigamma_gaab = g * (trigamma(a) - trigamma(a + b))
-    trigamma_gbab = g * (trigamma(b) - trigamma(a + b))
+    sum_x_trigamma = sum(trigamma(x + r))
+    trigamma_gaab = G * (trigamma(a) - trigamma(a + b))
+    trigamma_gbab = G * (trigamma(b) - trigamma(a + b))
 
     # Calculate Score vector:
     Score = c(sum_ma_digamma + sum_x_digamma - Sm * digamma(r),
@@ -81,7 +81,7 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
     H33 = sum_b_trigamma - trigamma_gbab
     H12 = sum_ma_trigamma
     H13 = sum(mj * trigamma(a. + b.))
-    H23 = g * trigamma(a + b) - sum(trigamma(a. + b.))
+    H23 = G * trigamma(a + b) - sum(trigamma(a. + b.))
 
     # Combine Hessian components into Hessian matrix:
     Hessian = matrix(c(H11, H12, H13, H12, H22, H23, H13, H23, H33), 3, 3)
@@ -95,7 +95,7 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
 
     # Calculate current objective function value:
     obj_old = obj
-    obj = obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - g * lbeta(a, b) - Sm * lgamma(r)
+    obj = obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - G * lbeta(a, b) - Sm * lgamma(r)
 
     # Calculate change in objective function from prior step to current:
     err = obj - obj_old
