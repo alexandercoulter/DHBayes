@@ -15,6 +15,14 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
   # Pull out unique group IDs:
   unique.g = sort(unique(df$'g'))
   G = length(unique.g)
+  Sx = mj = rep(NA, G)
+  for(j in 1:G){
+    d = df$'x'[df$'g' == unique.g[j]]
+    Sx[j] = sum(d)
+    mj[j] = length(d)
+  }
+  Sm = sum(mj)
+
 
   # Exit if number of groups G is 3 or fewer:
   if(G < 4) stop('Algorithm cannot provide solution for three or fewer groups.')
