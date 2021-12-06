@@ -33,10 +33,15 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
   iternum = 0
 
   # Give initial values:
-  rab = c(1, 1, 1)
+  r = a = b = 1
+  rab = c(r, a, b)
+
+  # Calculate a', b':
+  a. = a + mj * r
+  b. = b + Sx
 
   # Calculate initial objective function value:
-  obj = NULL
+  obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - g * lbeta(a, b) - Sm * lgamma(r)
 
   # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
   while((abs(err) > tol) & iternum < maxIter){
@@ -90,7 +95,7 @@ empb_beta_negbinomial = function(df, eta = 0.01, tol = 0.1, maxIter = 10000){
 
     # Calculate current objective function value:
     obj_old = obj
-    obj = NULL
+    obj = obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - g * lbeta(a, b) - Sm * lgamma(r)
 
     # Calculate change in objective function from prior step to current:
     err = obj - obj_old
