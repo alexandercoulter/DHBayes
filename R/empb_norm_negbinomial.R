@@ -40,13 +40,13 @@ empb_norm_negbinomial = function(df, lambda = 0.1, MLEeta = 0.1, EMPBeta = 0.01,
   for(j in 1:G){
     d = df[df$'g' == unique.g[j], ]
     mj[j] = nrow(d)
-    muj[j, ] = mle_negbinomial(df = d, eta = MLEeta, lambda = lambda, tol = tol, maxIter = maxIter)
+    muj[j, ] = mle_negbinomial(df = d, eta = MLEeta, lambda = lambda, maxIter = 1000)
     r = muj[j, 1]
     p = muj[j, 2]
     M = mj[j]
-    Tauj[j, 1, 1] = r * M * (r * trigamma(r) + digamma(r) - log(p)) - r * sum(digamma(d$'x' + r) + r * trigamma(d$'x' + r))
     Tauj[j, 1, 2] = Tauj[j, 2, 1] = r * (p - 1) * M
-    Tauj[j, 2, 2] = -1 * Tauj[j, 2, 1]
+    Tauj[j, 2, 2] = -1 * Tauj[j, 2, 1] + lambda
+    Tauj[j, 1, 1] = max(r * M * (r * trigamma(r) + digamma(r) - log(p)) - r * sum(digamma(d$'x' + r) + r * trigamma(d$'x' + r)) + lambda, (0.1 + Tauj[j, 1, 2]^2)/Tauj[j, 2, 2])
   }
 
   # Set muj to appropriate log, log-odds scale, instead of r/p from mle_negbinomial:
