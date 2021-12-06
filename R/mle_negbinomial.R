@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 200){
+mle_negbinomial = function(df, eta = 0.1, lambda = 0.01, tol = 0.0001, maxIter = 10000){
   # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -19,7 +19,7 @@ mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 2
   # Calculate MLE from input:
   M = length(df$x)
   Sx = sum(df$x)
-  ro = if(Sx == 0) c(1, 1) else c(1, M / Sx)
+  ell = c(1, 0)
 
   Step = c(tol, tol)
   Score = rep(NA, 2)
@@ -27,37 +27,37 @@ mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 2
   iternum = 0
 
   while((sum(abs(Step)) > tol) & iternum < maxIter){
-    r = ro[1]
-    o = ro[2]
+    r = exp(ell[1])
+    o = exp(ell[2])
+    p = o / (1 + o)
 
     # Cannot do Newton's method if Sx == 0 (second derivative does not exist):
     if(Sx == 0){
 
       # Calculate Score vector for step:
-      Score = M * c(log(o / (1 + o)), r / (o * (1 + o))) - lambda
+      Score = M * c(log(p), r / (o * (1 + o))) - lambda
 
       # Calculate step for 'ro', capping at some proportion of existing 'ro' value to not overshoot into negatives:
-      Step = pmax(-0.5 * ro, Score)
+      Step = pmax(-0.5 * c(r, o), Score)
 
       # Take damped step:
-      ro = ro + eta * Step
+      ell = log(c(r, o) + eta * Step)
 
     } else {
 
       # Calculate Score vector for Newton's step:
-      Score = c(M * (log(o / (1 + o)) - digamma(r)) + sum(digamma(df$x + r)),
-                sum(r / o - (df$x + r) / (1 + o))) - lambda
+      Score = c(r * M * (log(p) - digamma(r)) + r * sum(digamma(df$x + r)),
+                r * M * (1 - p) - p * Sx) - lambda * ell
 
       # Calculate Hessian Matrix for Newton's step:
-      Hessian[1] = sum(trigamma(df$x + r)) - M * trigamma(r)
-      Hessian[c(2, 3)] = M / (o * (1 + o))
-      Hessian[4] = sum((df$x + r) / (1 + o)^2 - r / o^2)
-
-      # Calculate step for 'ro', capping at some proportion of existing 'ro' value to not overshoot into negatives:
-      Step = pmin(0.5 * ro, solve(Hessian, Score))
+      Hessian[1] = r * M * (log(p) - r * trigamma(r) - digamma(r)) + r * sum(digamma(df$'x' + r) + r * trigamma(df$'x' + r))
+      Hessian[c(2, 3)] = r * (1 - p) * M
+      Hessian[4] = -p * (1 - p) * (Sx + r * M)
+      diag(Hessian) = diag(Hessian) - lambda
 
       # Take damped step:
-      ro = ro - eta * Step
+      Step = solve(Hessian, Score)
+      ell = ell - eta * Step
 
     }
 
@@ -65,5 +65,10 @@ mle_negbinomial = function(df, eta = 1, lambda = 0.01, tol = 0.0001, maxIter = 2
     iternum = iternum + 1
 
   }
-  return(c(ro[1], ro[2] / (1 + ro[2])))
+
+  r = exp(ell[1])
+  o = exp(ell[2])
+  p = o / (1 + o)
+
+  return(c(r, p))
 }
