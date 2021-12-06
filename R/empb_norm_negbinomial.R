@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01, tol = 1e-3, maxIter = 10000){
+empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01, tol = 1e-3, maxIter = 1000){
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
 
   if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
@@ -66,8 +66,8 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
   # Calculate initial objective function value:
   B = 0
   for(j in 1:G){
-    Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
-    C = Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ]
+    Rhoji[j, , ] = solve(Tau + Tauj[j, , ])
+    C = Tau %*% mu + Tauj[j, , ] %*% muj[j, ]
     B = B + t(C) %*% Rhoji[j, , ] %*% C
   }
   obj = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(Rhoji[, 1, 1] * Rhoji[, 2, 2] - Rhoji[, 1, 2] * Rhoji[, 2, 1])) + B)
@@ -78,8 +78,8 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
 
     # Prepare calculations for new Tau gradient calculation:
     for(j in 1:G){
-      Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
-      Aj[, j] = Rhoji[j, , ] %*% (Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ])
+      Rhoji[j, , ] = solve(Tau + Tauj[j, , ])
+      Aj[, j] = Rhoji[j, , ] %*% (Tau %*% mu + Tauj[j, , ] %*% muj[j, ])
     }
 
     # Calculate Tau gradient:
@@ -91,8 +91,8 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
     # Calculate new mu:
     B = numeric(2)
     for(j in 1:G){
-      Rhoji[j, , ] = solve(Tau + mj[j] * Tauj[j, , ])
-      B = B + Rhoji[j, , ] %*% (mj[j] * Tauj[j, , ] %*% muj[j, ])
+      Rhoji[j, , ] = solve(Tau + Tauj[j, , ])
+      B = B + Rhoji[j, , ] %*% Tauj[j, , ] %*% muj[j, ]
     }
     mu = c(solve(diag(2) - colSums(Rhoji) %*% Tau / G) %*% B) / G
 
@@ -102,7 +102,7 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
     # Calculate current objective function value:
     B = 0
     for(j in 1:G){
-      C = Tau %*% mu + mj[j] * Tauj[j, , ] %*% muj[j, ]
+      C = Tau %*% mu + Tauj[j, , ] %*% muj[j, ]
       B = B + t(C) %*% Rhoji[j, , ] %*% C
     }
     obj_old = obj
@@ -113,5 +113,6 @@ empb_norm_negbinomial = function(df, lambda = 0.01, MLEeta = 0.1, EMPBeta = 0.01
 
   }
 
-  return(list('mu' = mu, 'Sigma'  = solve(Tau)))
+  return(list('mu' = mu, 'Sigma'  = solve(Tau), 'Obj' = obj))
 }
+
