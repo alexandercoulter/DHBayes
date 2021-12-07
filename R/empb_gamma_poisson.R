@@ -64,7 +64,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
     ab = c(mean(Sx / mj)^2 / var(Sx / mj),
            mean(Sx / mj) / var(Sx / mj))
   } else {
-    ab = starting_rab
+    ab = starting_ab
   }
   a = ab[1]
   b = ab[2]
@@ -137,7 +137,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
     a. = a + Sx
     b. = b + mj
     obj_old = obj
-    obj = obj = g * (a * log(b) - lgamma(a)) + sum(lgamma(a.) - a. * log(b.))
+    obj = obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(a.) - a. * log(b.))
 
     ###########################################################################
     # Calculate change in objective function from prior step to current:
@@ -147,7 +147,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
 
   #############################################################################
   # Return empirical Bayes solutions, a, and b:
-  return(list('a' = a, 'b' = b))
+  return(list('a' = a, 'b' = b, 'obj' = obj))
 
 }
 
