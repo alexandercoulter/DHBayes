@@ -12,11 +12,11 @@
 #'
 #' @examples
 empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, starting_rab = NULL, method = c('newton', 'gdescent')){
+  # Object 'df' should be 'data.frame', with columns 'x' and 'g'.  To that end:
 
-  # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
-  if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
-  if(!all(c('x', 'g') %in% names(df))) stop('Object \'df\' must contain list elements (or data.frame columns) named \'x\' and \'g\', respectively.')
-  if(length(df$x) != length(df$g)) stop('List elements are not of same length.')
+  if(class(df) != 'data.frame') stop('Object \'df\' should be of type \'data.frame\'.')
+  if(!all(c('x', 'g') %in% names(df))) stop('Object \'df\' must contain data.frame columns named \'x\' and \'g\'.')
+  if(length(df$x) != length(df$g)) stop('Object \'df\' data.frame columns \'x\' and \'g\' are not of same length.')
 
   # Dampening parameter eta must be positive:
   if(eta <= 0) stop('Object \'eta\' must be positive.')

@@ -9,13 +9,12 @@
 #'
 #' @examples
 empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5){
-  # Object 'df' should be 'data.frame' or 'list' type, with elements 'n', 'x', and 'g'.  To that end:
 
-  if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
-  if(!all(c('n', 'x', 'g') %in% names(df))) stop('Object \'df\' must contain list elements (or data.frame columns) named \'n\', \'x\', and \'g\', respectively.')
-  if((length(df$n) != length(df$x)) | (length(df$n) != length(df$g))) stop('List elements are not of same length.')
+  # Object 'df' should be 'data.frame', with columns 'n', 'x', and 'g'.  To that end:
+  if(class(df) != 'data.frame') stop('Object \'df\' should be of type \'data.frame\'.')
+  if(!all(c('n', 'x', 'g') %in% names(df))) stop('Object \'df\' must contain data.frame columns named \'n\', \'x\', and \'g\'.')
+  if((length(df$n) != length(df$x)) | (length(df$n) != length(df$g))) stop('Object \'df\' data.frame columns are not of same length.')
 
-  ####################################################################
   # Calculate parameters, starting points for optimizer:
   ug = unique(df$g)
   Lg = length(ug)
