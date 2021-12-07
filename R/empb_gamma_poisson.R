@@ -76,7 +76,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
 
   #############################################################################
   # Calculate initial objective function value, error:
-  obj = NULL
+  obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(a.) - a. * log(b.))
   err = tol + 1
 
   #############################################################################
@@ -97,11 +97,15 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
 
       #########################################################################
       # Calculate Score vector:
-      Score = NULL
+      Score = c(G * (log(b) - digamma(a)) + sum(digamma(a.) - log(b.)),
+                G * a / b - sum(a. / b.))
 
       #########################################################################
       # Calculate Hessian matrix:
-      Hessian = NULL
+      H11 = sum(trigamma(a.)) - G * trigamma(a)
+      H12 = G / b - sum(1 / b.)
+      H22 = sum(a. / (b. * b.)) - G * a / (b * b)
+      Hessian[1:4] = c(H11, H12, H12, H22)
 
       #########################################################################
       # Take damped step:
@@ -112,7 +116,8 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
 
       #########################################################################
       # Calculate Score vector:
-      Score = NULL
+      Score = c(G * (log(b) - digamma(a)) + sum(digamma(a.) - log(b.)),
+                G * a / b - sum(a. / b.))
 
       #########################################################################
       # Take step:
@@ -132,7 +137,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
     a. = a + Sx
     b. = b + mj
     obj_old = obj
-    obj = NULL
+    obj = obj = g * (a * log(b) - lgamma(a)) + sum(lgamma(a.) - a. * log(b.))
 
     ###########################################################################
     # Calculate change in objective function from prior step to current:
