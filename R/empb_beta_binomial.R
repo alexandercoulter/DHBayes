@@ -22,9 +22,11 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5){
   Lg = length(ug)
   Ng = Sg = Tg = rep(0, length(ug))
   for(j in 1:Lg){
+
     Sg[j] = sum(df$x[df$g == ug[j]])
     Ng[j] = sum(df$n[df$g == ug[j]])
     Tg[j] = Ng[j] - Sg[j]
+
   }
 
   #############################################################################

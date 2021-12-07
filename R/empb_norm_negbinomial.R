@@ -153,8 +153,10 @@ empb_norm_negbinomial = function(df, lambda = 1, MLEeta = 0.001, EMPBeta = 0.001
     # Calculate current objective function value:
     B = 0
     for(j in 1:G){
+
       C = Tau %*% mu + Tauj[j, , ] %*% muj[j, ]
       B = B + t(C) %*% Rhoji[j, , ] %*% C
+
     }
     obj_old = obj
     obj = 0.5 * (G * log(det(Tau)) - G * t(mu) %*% Tau %*% mu - sum(log(Rhoji[, 1, 1] * Rhoji[, 2, 2] - Rhoji[, 1, 2] * Rhoji[, 2, 1])) + B)
