@@ -88,16 +88,16 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
     a = rab[2]
     b = rab[3]
 
-    #############################################################################
+    ###########################################################################
     # Calculate a', b':
     a. = a + mj * r
     b. = b + Sx
 
-    #############################################################################
+    ###########################################################################
     # If/else on method input: if 'newton', perform Newton's method; if 'gdescent', perform gradient descent:
     if(method == 'newton'){
 
-      #############################################################################
+      #########################################################################
       # Calculate preparatory values:
       sum_a_digamma = sum(digamma(a.) - digamma(a. + b.))
       sum_b_digamma = sum(digamma(b.) - digamma(a. + b.))
@@ -112,13 +112,13 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
       trigamma_gaab = G * (trigamma(a) - trigamma(a + b))
       trigamma_gbab = G * (trigamma(b) - trigamma(a + b))
 
-      #############################################################################
+      #########################################################################
       # Calculate Score vector:
       Score = c(sum_ma_digamma + sum_x_digamma - Sm * digamma(r),
                 sum_a_digamma - digamma_gaab,
                 sum_b_digamma - digamma_gbab)
 
-      #############################################################################
+      #########################################################################
       # Calculate Hessian components:
       H11 = sum_ma_trigamma + sum_x_trigamma - Sm * trigamma(r)
       H22 = sum_a_trigamma - trigamma_gaab
@@ -127,18 +127,18 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
       H13 = -sum(mj * trigamma(a. + b.))
       H23 = G * trigamma(a + b) - sum(trigamma(a. + b.))
 
-      #############################################################################
+      #########################################################################
       # Combine Hessian components into Hessian matrix:
       Hessian = matrix(c(H11, H12, H13, H12, H22, H23, H13, H23, H33), 3, 3)
 
-      #############################################################################
+      #########################################################################
       # Take damped step:
       Step = solve(Hessian, Score)
       rab = rab - eta * Step
 
     } else if(method == 'gdescent'){
 
-      #############################################################################
+      #########################################################################
       # Calculate preparatory values:
       sum_a_digamma = sum(digamma(a.) - digamma(a. + b.))
       sum_b_digamma = sum(digamma(b.) - digamma(a. + b.))
@@ -147,24 +147,24 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
       digamma_gaab = G * (digamma(a) - digamma(a + b))
       digamma_gbab = G * (digamma(b) - digamma(a + b))
 
-      #############################################################################
+      #########################################################################
       # Calculate Score vector:
       Score = c(sum_ma_digamma + sum_x_digamma - Sm * digamma(r),
                 sum_a_digamma - digamma_gaab,
                 sum_b_digamma - digamma_gbab)
 
-      #############################################################################
+      #########################################################################
       # Take step:
       Step = Score
       rab = rab + eta * Step
 
     }
 
-    #############################################################################
+    ###########################################################################
     # Update iteration count to exit loop at maxIter:
     iternum = iternum + 1
 
-    #############################################################################
+    ###########################################################################
     # Calculate current objective function value:
     r = rab[1]
     a = rab[2]
@@ -174,7 +174,7 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
     obj_old = obj
     obj = sum(lgamma(x + r)) + sum(lbeta(a., b.)) - G * lbeta(a, b) - Sm * lgamma(r)
 
-    #############################################################################
+    ###########################################################################
     # Calculate change in objective function from prior step to current:
     err = obj - obj_old
 
