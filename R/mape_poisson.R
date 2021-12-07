@@ -1,3 +1,13 @@
+#' Title
+#'
+#' @param df
+#' @param a_prior
+#' @param b_prior
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mape_poisson = function(df, a_prior, b_prior){
 
   #############################################################################
