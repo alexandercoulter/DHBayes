@@ -100,6 +100,6 @@ mle_negbinomial = function(df, eta = 0.001, lambda = 0.01, tol = 0.0001, maxIter
 
   #############################################################################
   # Return MLE r, p:
-  return(c(r, p))
+  return(list('r' = r, 'p' = p))
 
 }
