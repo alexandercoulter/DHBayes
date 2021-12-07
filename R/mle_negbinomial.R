@@ -11,10 +11,10 @@
 #'
 #' @examples
 mle_negbinomial = function(df, eta = 0.001, lambda = 0.01, tol = 0.0001, maxIter = 10000){
-  # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
+  # Object 'df' should be 'data.frame', with column 'x'.  To that end:
 
-  if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
-  if(!('x' %in% names(df))) stop('Object \'df\' must contain list element (or data.frame column) named \'x\'.')
+  if(class(df) != 'data.frame') stop('Object \'df\' should be of type \'data.frame\'.')
+  if(!('x' %in% names(df))) stop('Object \'df\' must contain data.frame column named \'x\'.')
 
   # Calculate MLE from input:
   M = length(df$x)

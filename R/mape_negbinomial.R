@@ -13,10 +13,10 @@
 #'
 #' @examples
 mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001, maxIter = 200){
-  # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
+  # Object 'df' should be 'data.frame', with column 'x'.  To that end:
 
-  if(typeof(df) != 'list') stop('Object \'df\' should be of type \'data.frame\' or \'list\'.')
-  if(!('x' %in% names(df))) stop('Object \'df\' must contain list element (or data.frame column) named \'x\'.')
+  if(class(df) != 'data.frame') stop('Object \'df\' should be of type \'data.frame\'.')
+  if(!('x' %in% names(df))) stop('Object \'df\' must contain data.frame column named \'x\'.')
 
   # Prior parameter r_prior must be positive:
   if(r_prior <= 0) stop('Object \'r_prior\' must be positive.')
