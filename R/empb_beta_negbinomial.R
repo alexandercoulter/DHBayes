@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param df
+#' @param eta
+#' @param tol
+#' @param maxIter
+#' @param starting_rab
+#' @param method
+#'
+#' @return
+#' @export
+#'
+#' @examples
 empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, starting_rab = NULL, method = c('newton', 'gdescent')){
 
   # Object 'df' should be 'data.frame' or 'list' type, with elements 'x' and 'g'.  To that end:
@@ -139,4 +152,3 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
 
   return(list('r' = r, 'a' = a, 'b' = b))
 }
-
