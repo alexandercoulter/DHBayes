@@ -1,4 +1,4 @@
-#' Title
+#' mle_negbinomial
 #'
 #' @param df
 #' @param eta

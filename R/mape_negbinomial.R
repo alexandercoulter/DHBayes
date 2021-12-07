@@ -1,4 +1,4 @@
-#' Title
+#' mape_negbinomial
 #'
 #' @param df
 #' @param r_prior

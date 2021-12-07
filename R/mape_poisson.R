@@ -1,4 +1,4 @@
-#' Title
+#' mape_poisson
 #'
 #' @param df
 #' @param a_prior

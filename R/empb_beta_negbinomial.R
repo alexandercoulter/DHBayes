@@ -1,4 +1,4 @@
-#' Title
+#' empb_beta_negbinomial
 #'
 #' @param df
 #' @param eta

@@ -1,4 +1,4 @@
-#' Title
+#' empb_norm_negbinomial
 #'
 #' @param df
 #' @param lambda
