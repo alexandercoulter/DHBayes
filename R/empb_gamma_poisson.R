@@ -64,7 +64,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
     ab = c(mean(Sx / mj)^2 / var(Sx / mj),
            mean(Sx / mj) / var(Sx / mj))
   } else {
-    if((length(starting_ab) != 2) | any(starting_ab <= 0)) stop('Vector of starting estimate \'starting_ab\' must have two positive numbers.')
+    if((length(starting_ab) != 2) | any(starting_ab <= 0)) stop('Vector of starting estimate \'starting_ab\' must have two positive numbers or otherwise be NULL.')
     ab = starting_ab
   }
   a = ab[1]
