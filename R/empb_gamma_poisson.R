@@ -1,3 +1,16 @@
+#' empb_gamma_poisson
+#'
+#' @param df
+#' @param eta
+#' @param tol
+#' @param maxIter
+#' @param starting_ab
+#' @param method
+#'
+#' @return
+#' @export
+#'
+#' @examples
 empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, starting_ab = NULL, method = c('newton', 'gdescent')){
 
   #############################################################################
