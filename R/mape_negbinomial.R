@@ -99,6 +99,6 @@ mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001
 
   #############################################################################
   # Return MAPE r, p:
-  return(c(r, p))
+  return(list('r' = r, 'p' = p))
 
 }
