@@ -1,3 +1,17 @@
+#' Title
+#'
+#' @param df
+#' @param r_prior
+#' @param p_prior
+#' @param M_prior
+#' @param eta
+#' @param tol
+#' @param maxIter
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001, maxIter = 200){
   # Object 'df' should be 'data.frame' or 'list' type, with element 'x'.  To that end:
 
