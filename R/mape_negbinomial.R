@@ -66,28 +66,28 @@ mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001
     o = exp(ell[2])
     p = o / (1 + o)
 
-    #############################################################################
+    ###########################################################################
     # Calculate Score vector for Newton's step:
     Score = c(r * M * (log(p) - digamma(r)) + r * sum(digamma(df$x + r)),
               r * M * (1 - p) - p * Sx)
     Score = Score - Sigma_i %*% (ell - mu)
 
-    #############################################################################
+    ###########################################################################
     # Calculate Hessian Matrix for Newton's step:
     Hessian[1] = r * M * (log(p) - digamma(r) - r * trigamma(r)) + r * sum(digamma(df$x + r) + r * trigamma(df$x + r))
     Hessian[c(2, 3)] = r * (1 - p) * M
     Hessian[4] = -1 * p * (1 - p) * (Sx + r * M)
     Hessian = Hessian - Sigma_i
 
-    #############################################################################
+    ###########################################################################
     # Calculate step for 'ro':
     Step = solve(Hessian, Score)
 
-    #############################################################################
+    ###########################################################################
     # Take damped step:
     ell = ell - eta * Step
 
-    #############################################################################
+    ###########################################################################
     # Update iteration count to allow early exit:
     iternum = iternum + 1
 
