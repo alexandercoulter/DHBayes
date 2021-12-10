@@ -1,18 +1,19 @@
 #' mape_negbinomial
 #'
-#' @param df
-#' @param r_prior
-#' @param p_prior
-#' @param M_prior
-#' @param eta
-#' @param tol
-#' @param maxIter
+#' @param df data.frame object, containing at least column named 'x' containing non-negative integer values.
+#' @param r_prior positive numeric; recommended choose as if there was observed "prior sample" Y of size 'M_prior', where Y ~ nbinom(r_prior, p_prior).
+#' @param p_prior numeric strictly greater than 0 and less than 1; recommended choose as if there was observed "prior sample" Y of size 'M_prior', where Y ~ nbinom(r_prior, p_prior).
+#' @param M_prior positive numeric; recommended choose as if there was observed "prior sample" Y of size 'M_prior', where Y ~ nbinom(r_prior, p_prior).
+#' @param eta positive numeric dampening parameter for Newton's method, gradient descent algorithm.
+#' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
+#' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
+#' @param method string controlling optimization method; default 'newton'.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001, maxIter = 200){
+mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001, maxIter = 10000, method = c('newton', 'gdescent')){
 
   #############################################################################
   # Object 'df' should be 'data.frame', with column 'x'.  To that end:
@@ -52,6 +53,10 @@ mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001
   Sx = sum(df$x)
 
   #############################################################################
+  # Get method:
+  method = match.arg(method)
+
+  #############################################################################
   # Initialize empty objects for WHILE loop:
   Step = c(tol, tol)
   Score = rep(NA, 2)
@@ -67,21 +72,33 @@ mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001
     p = o / (1 + o)
 
     ###########################################################################
-    # Calculate Score vector for Newton's step:
+    # Calculate Score vector:
     Score = c(r * M * (log(p) - digamma(r)) + r * sum(digamma(df$x + r)),
               r * M * (1 - p) - p * Sx)
     Score = Score - Sigma_i %*% (ell - mu)
 
     ###########################################################################
-    # Calculate Hessian Matrix for Newton's step:
-    Hessian[1] = r * M * (log(p) - digamma(r) - r * trigamma(r)) + r * sum(digamma(df$x + r) + r * trigamma(df$x + r))
-    Hessian[c(2, 3)] = r * (1 - p) * M
-    Hessian[4] = -1 * p * (1 - p) * (Sx + r * M)
-    Hessian = Hessian - Sigma_i
+    # Perform Newton's method step if method == 'newton', otherwise gradient descent:
+    if(method == 'newton'){
 
-    ###########################################################################
-    # Calculate step for 'ro':
-    Step = solve(Hessian, Score)
+      #########################################################################
+      # Calculate Hessian Matrix for Newton's step if method = 'newton':
+      Hessian[1] = r * M * (log(p) - digamma(r) - r * trigamma(r)) + r * sum(digamma(df$x + r) + r * trigamma(df$x + r))
+      Hessian[c(2, 3)] = r * (1 - p) * M
+      Hessian[4] = -1 * p * (1 - p) * (Sx + r * M)
+      Hessian = Hessian - Sigma_i
+
+      #########################################################################
+      # Calculate step for 'ro':
+      Step = solve(Hessian, Score)
+
+    } else {
+
+      #########################################################################
+      # Calculate step for 'ro':
+      Step = -Score
+
+    }
 
     ###########################################################################
     # Take damped step:
