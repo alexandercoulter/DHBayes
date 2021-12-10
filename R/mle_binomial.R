@@ -1,8 +1,8 @@
 #' mle_binomial
 #'
-#' @param df
+#' @param df data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), and 'n' containing non-negative integer values (number of trials)
 #'
-#' @return
+#' @return MLE of binomial distribution parameter p, assuming df$x ~ binom(p, df$n).
 #' @export
 #'
 #' @examples
