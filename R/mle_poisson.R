@@ -1,6 +1,6 @@
 #' mle_poisson
 #'
-#' @param df data.frame object, containing at least column named 'x'
+#' @param df data.frame object, containing at least column named 'x' containing non-negative integer values.
 #'
 #' @return MLE of Poisson distribution parameter L, assuming df$x ~ poisson(L).
 #' @export
