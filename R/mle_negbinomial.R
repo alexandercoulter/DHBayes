@@ -1,13 +1,13 @@
 #' mle_negbinomial
 #'
-#' @param df
-#' @param eta
-#' @param lambda
-#' @param tol
-#' @param maxIter
-#' @param method
+#' @param df data.frame object, containing at least column named 'x' containing non-negative integer values.
+#' @param eta positive numeric dampening parameter for Newton's method, gradient descent algorithm.
+#' @param lambda non-negative numeric regularization parameter.
+#' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
+#' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
+#' @param method string controlling optimization method; default 'newton'.
 #'
-#' @return
+#' @return list containing MLE of negative binomial distribution parameters r and p, assuming df$x ~ nbinom(r, p).
 #' @export
 #'
 #' @examples
