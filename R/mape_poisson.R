@@ -1,10 +1,10 @@
 #' mape_poisson
 #'
-#' @param df
-#' @param a_prior
-#' @param b_prior
+#' @param df data.frame object, containing at least column named 'x' containing non-negative integer values.
+#' @param a_prior positive numeric, giving prior parameter 'a', assuming Poisson parameter L ~ beta(a, b).
+#' @param b_prior positive numeric, giving prior parameter 'b', assuming Poisson parameter L ~ beta(a, b).
 #'
-#' @return
+#' @return Maximum a-posteriori estimate (MAPE) of Poisson parameter L, assuming df$x ~ poisson(L), and L ~ beta(a, b).
 #' @export
 #'
 #' @examples
