@@ -1,8 +1,8 @@
 #' mle_poisson
 #'
-#' @param df
+#' @param df data.frame object, containing at least column named 'x'
 #'
-#' @return
+#' @return MLE of Poisson distribution parameter L, assuming df$x ~ poisson(L).
 #' @export
 #'
 #' @examples
