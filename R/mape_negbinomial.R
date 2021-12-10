@@ -9,7 +9,7 @@
 #' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
 #' @param method string controlling optimization method; default 'newton'.
 #'
-#' @return
+#' @return List object containing maximum a-posteriori estimates (MAPEs) of negative binomial distribution parameters r and p, assuming df$x ~ nbinom(r, p), and (r, p) ~ MVN(mu, Sigma).  (Please see DHBayes_Derivations.pdf on GitHub for how mu, Sigma relate to 'r_prior', 'p_prior', and 'M_prior' inputs.)
 #' @export
 #'
 #' @examples
