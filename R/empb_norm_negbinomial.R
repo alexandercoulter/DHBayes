@@ -1,6 +1,6 @@
 #' empb_norm_negbinomial
 #'
-#' @param df df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
+#' @param df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
 #' @param lambda non-negative numeric regularization parameter.
 #' @param MLEeta positive numeric dampening parameter for MLE fitting in group-level normal likelihood approximations (see 'mle_negbinomial' function).
 #' @param EMPBeta positive numeric dampening parameter for gradient descent algorithm, for this function.

@@ -1,6 +1,6 @@
 #' empb_gamma_poisson
 #'
-#' @param df df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
+#' @param df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
 #' @param eta positive numeric dampening parameter for Newton's method, gradient descent algorithm.
 #' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
 #' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
