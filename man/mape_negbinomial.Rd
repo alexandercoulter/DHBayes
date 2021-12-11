@@ -11,15 +11,34 @@ mape_negbinomial(
   M_prior,
   eta = 1,
   tol = 1e-04,
-  maxIter = 200
+  maxIter = 10000,
+  method = c("newton", "gdescent")
 )
 }
 \arguments{
-\item{maxIter}{}
+\item{df}{data.frame object, containing at least column named 'x' containing non-negative integer values.}
+
+\item{r_prior}{positive numeric; recommended choose as if there was observed "prior sample" Y of size 'M_prior', where Y ~ nbinom(r_prior, p_prior).}
+
+\item{p_prior}{numeric strictly greater than 0 and less than 1; recommended choose as if there was observed "prior sample" Y of size 'M_prior', where Y ~ nbinom(r_prior, p_prior).}
+
+\item{M_prior}{positive numeric; recommended choose as if there was observed "prior sample" Y of size 'M_prior', where Y ~ nbinom(r_prior, p_prior).}
+
+\item{eta}{positive numeric dampening parameter for Newton's method, gradient descent algorithm.}
+
+\item{tol}{non-negative numeric tolerance parameter for exiting optimization algorithm.}
+
+\item{maxIter}{positive integer setting maximum number of iterations for optimization algorithm.}
+
+\item{method}{string controlling optimization method; default 'newton'.}
 }
 \value{
-
+List object containing maximum a-posteriori estimates (MAPEs) of negative binomial distribution parameters r and p, assuming df$x ~ nbinom(r, p), and (r, p) ~ MVN(mu, Sigma).  (Please see DHBayes_Derivations.pdf on GitHub for how mu, Sigma relate to 'r_prior', 'p_prior', and 'M_prior' inputs.)
 }
 \description{
 mape_negbinomial
+}
+\examples{
+# Hello world
+x = 2
 }

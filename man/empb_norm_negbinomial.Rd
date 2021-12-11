@@ -15,11 +15,27 @@ empb_norm_negbinomial(
 )
 }
 \arguments{
-\item{jitter}{}
+\item{df}{data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.}
+
+\item{lambda}{non-negative numeric regularization parameter.}
+
+\item{MLEeta}{positive numeric dampening parameter for MLE fitting in group-level normal likelihood approximations (see 'mle_negbinomial' function).}
+
+\item{EMPBeta}{positive numeric dampening parameter for gradient descent algorithm, for this function.}
+
+\item{tol}{non-negative numeric tolerance parameter for exiting optimization algorithm.}
+
+\item{maxIter}{positive integer setting maximum number of iterations for optimization algorithm.}
+
+\item{jitter}{Boolean, to add small-magnitude noise to initial precision matrix estimate to ensure invertibility; default FALSE.}
 }
 \value{
-
+list object containing empirical Bayes (EMPB) estimates of mu, Sigma hyperparameters, assuming df$x ~ nbinom(r_g, p_g), and (r_g, p_g) ~ MVN(mu, Sigma), where 'p_g' and 'r_g' denote group-level parameters.
 }
 \description{
 empb_norm_negbinomial
+}
+\examples{
+# Hello world
+x = 2
 }

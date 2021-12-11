@@ -14,11 +14,25 @@ empb_gamma_poisson(
 )
 }
 \arguments{
-\item{method}{}
+\item{df}{data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.}
+
+\item{eta}{positive numeric dampening parameter for Newton's method, gradient descent algorithm.}
+
+\item{tol}{non-negative numeric tolerance parameter for exiting optimization algorithm.}
+
+\item{maxIter}{positive integer setting maximum number of iterations for optimization algorithm.}
+
+\item{starting_ab}{optional 2-long numeric vector, giving initial algorithm starting point for fitting empirical Bayes estimates for a and b; default NULL.}
+
+\item{method}{string controlling optimization method; default 'newton'.}
 }
 \value{
-
+list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ poisson(L_g), and L_g ~ gamma(a, b), where 'L_g' denotes a group-level parameter.
 }
 \description{
 empb_gamma_poisson
+}
+\examples{
+# Hello world
+x = 2
 }

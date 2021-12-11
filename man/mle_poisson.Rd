@@ -7,11 +7,15 @@
 mle_poisson(df)
 }
 \arguments{
-\item{df}{}
+\item{df}{data.frame object, containing at least column named 'x' containing non-negative integer values.}
 }
 \value{
-
+MLE of Poisson distribution parameter L, assuming df$x ~ poisson(L).
 }
 \description{
 mle_poisson
+}
+\examples{
+# Hello world
+x = 2
 }

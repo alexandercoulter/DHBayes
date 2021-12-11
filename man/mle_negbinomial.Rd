@@ -14,11 +14,25 @@ mle_negbinomial(
 )
 }
 \arguments{
-\item{method}{}
+\item{df}{data.frame object, containing at least column named 'x' containing non-negative integer values.}
+
+\item{eta}{positive numeric dampening parameter for Newton's method, gradient descent algorithm.}
+
+\item{lambda}{non-negative numeric regularization parameter.}
+
+\item{tol}{non-negative numeric tolerance parameter for exiting optimization algorithm.}
+
+\item{maxIter}{positive integer setting maximum number of iterations for optimization algorithm.}
+
+\item{method}{string controlling optimization method; default 'newton'.}
 }
 \value{
-
+list containing MLE of negative binomial distribution parameters r and p, assuming df$x ~ nbinom(r, p).
 }
 \description{
 mle_negbinomial
+}
+\examples{
+# Hello world
+x = 2
 }

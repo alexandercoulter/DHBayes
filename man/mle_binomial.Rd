@@ -7,11 +7,15 @@
 mle_binomial(df)
 }
 \arguments{
-\item{df}{}
+\item{df}{data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), and 'n' containing non-negative integer values (number of trials)}
 }
 \value{
-
+MLE of binomial distribution parameter p, assuming df$x ~ binom(p, df$n).
 }
 \description{
 mle_binomial
+}
+\examples{
+# Hello world
+x = 2
 }

@@ -7,11 +7,19 @@
 mape_poisson(df, a_prior, b_prior)
 }
 \arguments{
-\item{b_prior}{}
+\item{df}{data.frame object, containing at least column named 'x' containing non-negative integer values.}
+
+\item{a_prior}{positive numeric, giving prior parameter 'a', assuming Poisson parameter L ~ beta(a, b).}
+
+\item{b_prior}{positive numeric, giving prior parameter 'b', assuming Poisson parameter L ~ beta(a, b).}
 }
 \value{
-
+numeric, maximum a-posteriori estimate (MAPE) of Poisson parameter L, assuming df$x ~ poisson(L), and L ~ beta(a, b).
 }
 \description{
 mape_poisson
+}
+\examples{
+# Hello world
+x = 2
 }

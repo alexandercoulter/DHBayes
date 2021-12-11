@@ -7,11 +7,19 @@
 mape_binomial(df, a_prior, b_prior)
 }
 \arguments{
-\item{df}{}
+\item{df}{data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), and 'n' containing non-negative integer values (number of trials).}
+
+\item{a_prior}{positive numeric, giving prior parameter 'a', assuming binomial parameter p ~ beta(a, b).}
+
+\item{b_prior}{positive numeric, giving prior parameter 'b', assuming binomial parameter p ~ beta(a, b).}
 }
 \value{
-
+numeric, maximum a-posteriori estimate (MAPE) of binomial parameter p, assuming df$x ~ binom(p, df$n), and p ~ beta(a, b).
 }
 \description{
 mape_binomial
+}
+\examples{
+# Hello world
+x = 2
 }

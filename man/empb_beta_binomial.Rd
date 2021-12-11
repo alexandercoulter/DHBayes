@@ -4,14 +4,32 @@
 \alias{empb_beta_binomial}
 \title{empb_beta_binomial}
 \usage{
-empb_beta_binomial(df, eta = 0.1, tol = 1e-05)
+empb_beta_binomial(
+  df,
+  eta = 0.1,
+  tol = 1e-05,
+  maxIter = 10000,
+  method = c("newton", "gdescent")
+)
 }
 \arguments{
-\item{tol}{}
+\item{df}{data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), 'n' containing non-negative integer values (number of trials), and 'g' containing group labels.}
+
+\item{eta}{positive numeric dampening parameter for Newton's method, gradient descent algorithm.}
+
+\item{tol}{non-negative numeric tolerance parameter for exiting optimization algorithm.}
+
+\item{maxIter}{positive integer setting maximum number of iterations for optimization algorithm.}
+
+\item{method}{string controlling optimization method; default 'newton'.}
 }
 \value{
-
+list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ binom(p_g, df$n), and p_g ~ beta(a, b), where 'p_g' denotes a group-level parameter.
 }
 \description{
 empb_beta_binomial
+}
+\examples{
+# Hello world
+x = 2
 }
