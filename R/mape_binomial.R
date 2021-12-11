@@ -1,10 +1,10 @@
 #' mape_binomial
 #'
-#' @param a_prior
-#' @param b_prior
-#' @param df
+#' @param df data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), and 'n' containing non-negative integer values (number of trials)
+#' @param a_prior positive numeric, giving prior parameter 'a', assuming binomial parameter p ~ beta(a, b).
+#' @param b_prior positive numeric, giving prior parameter 'b', assuming binomial parameter p ~ beta(a, b).
 #'
-#' @return
+#' @return numeric, maximum a-posteriori estimate (MAPE) of binomial parameter p, assuming df$x ~ binom(p, df$n), and p ~ beta(a, b).
 #' @export
 #'
 #' @examples

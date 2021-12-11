@@ -4,7 +4,7 @@
 #' @param a_prior positive numeric, giving prior parameter 'a', assuming Poisson parameter L ~ beta(a, b).
 #' @param b_prior positive numeric, giving prior parameter 'b', assuming Poisson parameter L ~ beta(a, b).
 #'
-#' @return Maximum a-posteriori estimate (MAPE) of Poisson parameter L, assuming df$x ~ poisson(L), and L ~ beta(a, b).
+#' @return numeric, maximum a-posteriori estimate (MAPE) of Poisson parameter L, assuming df$x ~ poisson(L), and L ~ beta(a, b).
 #' @export
 #'
 #' @examples
