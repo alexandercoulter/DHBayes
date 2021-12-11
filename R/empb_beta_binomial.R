@@ -100,6 +100,6 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, method
 
   #############################################################################
   # Return empirical Bayes a, b:
-  return(list('a' = a, 'b' = b))
+  return(list('a' = ab[1], 'b' = ab[2]))
 
 }
