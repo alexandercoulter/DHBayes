@@ -28,7 +28,7 @@ mape_binomial = function(df, a_prior, b_prior){
   # Calculate numerator:
   a_post = a_prior + sum(df$x)
   # Calculate denominator; if too small, then exit with message:
-  denom = a_prior + b + sum(df$n) - 2
+  denom = a_prior + b_prior + sum(df$n) - 2
   if(denom <= 0) stop('Not enough samples to calculate MAPE using given prior parameters.')
 
   #############################################################################
