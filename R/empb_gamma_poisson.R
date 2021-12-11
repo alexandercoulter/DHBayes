@@ -7,7 +7,7 @@
 #' @param starting_ab optional 2-long numeric vector, giving initial algorithm starting point for fitting empirical Bayes estimates for a and b; default NULL.
 #' @param method string controlling optimization method; default 'newton'.
 #'
-#' @return list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ poisson(L_g), and (L_g) ~ gamma(a, b), where 'L_g' denotes a group-level parameter.
+#' @return list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ poisson(L_g), and L_g ~ gamma(a, b), where 'L_g' denotes a group-level parameter.
 #' @export
 #'
 #' @examples
