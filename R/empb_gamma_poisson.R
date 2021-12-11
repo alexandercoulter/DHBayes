@@ -82,7 +82,7 @@ empb_gamma_poisson = function(df, eta = 1, tol = 1e-10, maxIter = 10000, startin
 
   #############################################################################
   # Implement while loop that fits Tau/mu by coordinate gradient/analytic descent:
-  while((abs(err) > tol) & iternum < maxIter){
+  while((abs(err) > tol) & (iternum < maxIter)){
 
     a = ab[1]
     b = ab[2]
