@@ -1,13 +1,13 @@
 #' empb_beta_negbinomial
 #'
-#' @param df
-#' @param eta
-#' @param tol
-#' @param maxIter
-#' @param starting_rab
-#' @param method
+#' @param df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
+#' @param eta positive numeric dampening parameter for Newton's method, gradient descent algorithm.
+#' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
+#' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
+#' @param starting_rab optional 3-long numeric vector, giving initial algorithm starting point for fitting empirical Bayes estimates for r, a, and b, respectively; default NULL.
+#' @param method string controlling optimization method; default 'newton'.
 #'
-#' @return
+#' @return list object containing empirical Bayes (EMPB) estimates of r, a, and b hyperparameters, assuming df$x ~ nbinom(r, p_g), and p_g ~ beta(a, b), where 'p_g' denotes a group-level parameter.
 #' @export
 #'
 #' @examples
