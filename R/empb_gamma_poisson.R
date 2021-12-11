@@ -1,13 +1,13 @@
 #' empb_gamma_poisson
 #'
-#' @param df
-#' @param eta
-#' @param tol
-#' @param maxIter
-#' @param starting_ab
-#' @param method
+#' @param df df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
+#' @param eta positive numeric dampening parameter for Newton's method, gradient descent algorithm.
+#' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
+#' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
+#' @param starting_ab optional 2-long numeric vector, giving initial algorithm starting point for fitting empirical Bayes estimates for 'a' and 'b'; default NULL.
+#' @param method string controlling optimization method; default 'newton'.
 #'
-#' @return
+#' @return list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ npoisson(L_g), and (L_g) ~ gamma(a, b), where 'L_g' denotes a group-level parameter.
 #' @export
 #'
 #' @examples
