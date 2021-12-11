@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @examples
+#' # Hello world
+#' x = 2
 empb_norm_negbinomial = function(df, lambda = 1, MLEeta = 0.001, EMPBeta = 0.001, tol = 0.1, maxIter = 10000, jitter = FALSE){
 
   #############################################################################

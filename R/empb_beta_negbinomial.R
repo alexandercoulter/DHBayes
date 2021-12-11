@@ -11,6 +11,8 @@
 #' @export
 #'
 #' @examples
+#' # Hello world
+#' x = 2
 empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, starting_rab = NULL, method = c('newton', 'gdescent')){
 
   #############################################################################

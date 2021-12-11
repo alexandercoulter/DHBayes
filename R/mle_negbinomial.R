@@ -11,6 +11,8 @@
 #' @export
 #'
 #' @examples
+#' # Hello world
+#' x = 2
 mle_negbinomial = function(df, eta = 0.001, lambda = 0.01, tol = 0.0001, maxIter = 10000, method = c('newton', 'gdescent')){
 
   #############################################################################

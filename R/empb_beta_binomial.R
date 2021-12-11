@@ -10,6 +10,8 @@
 #' @export
 #'
 #' @examples
+#' # Hello world
+#' x = 2
 empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, method = c('newton', 'gdescent')){
 
   #############################################################################

@@ -8,6 +8,8 @@
 #' @export
 #'
 #' @examples
+#' # Hello world
+#' x = 2
 mape_binomial = function(df, a_prior, b_prior){
 
   #############################################################################

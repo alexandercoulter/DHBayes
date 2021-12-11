@@ -13,6 +13,8 @@
 #' @export
 #'
 #' @examples
+#' # Hello world
+#' x = 2
 mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001, maxIter = 10000, method = c('newton', 'gdescent')){
 
   #############################################################################
