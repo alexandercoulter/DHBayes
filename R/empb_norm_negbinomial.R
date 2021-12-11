@@ -1,14 +1,14 @@
 #' empb_norm_negbinomial
 #'
-#' @param df
-#' @param lambda
-#' @param MLEeta
-#' @param EMPBeta
-#' @param tol
-#' @param maxIter
-#' @param jitter
+#' @param df df data.frame object, containing at least columns 'x' containing non-negative integer values, and 'g' containing group labels.
+#' @param lambda non-negative numeric regularization parameter.
+#' @param MLEeta positive numeric dampening parameter for MLE fitting in group-level normal likelihood approximations (see 'mle_negbinomial' function).
+#' @param EMPBeta positive numeric dampening parameter for gradient descent algorithm, for this function.
+#' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
+#' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
+#' @param jitter Boolean, to add small-magnitude noise to initial precision matrix estimate to ensure invertibility; default FALSE.
 #'
-#' @return
+#' @return list object containing empirical Bayes (EMPB) estimates of mu, Sigma hyperparameters, assuming df$x ~ nbinom(r_g, p_g), and (r_g, p_g) ~ MVN(mu, Sigma), where 'p_g' and 'r_g' denote group-level parameters.
 #' @export
 #'
 #' @examples
