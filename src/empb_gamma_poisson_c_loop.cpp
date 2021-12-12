@@ -8,14 +8,16 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
-                                        const double& G,
-                                        const NumericVector& Sx,
-                                        const NumericVector& mj,
-                                        const double& eta,
-                                        const double& tol,
-                                        const int maxIter,
-                                        int method) {
+Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
+                                     const double& G,
+                                     const NumericVector& Sx,
+                                     const NumericVector& mj,
+                                     const double& eta,
+                                     const double& tol,
+                                     const int maxIter,
+                                     int method) {
+
+  double obj = 0;
 
   if(method == 0){
 
@@ -30,7 +32,7 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
     NumericVector A = a + Sx;
     NumericVector B = b + mj;
 
-    double obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
+    obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
     double old_obj = obj;
     double err = tol + 1;
     int iternum = 0;
@@ -54,6 +56,8 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
       ab[0] += eta * Step(0);
       ab[1] += eta * Step(1);
 
+      a = ab[0];
+      b = ab[1];
       A = a + Sx;
       B = b + mj;
       old_obj = obj;
@@ -77,7 +81,7 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
     NumericVector A = a + Sx;
     NumericVector B = b + mj;
 
-    double obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
+    obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
     double old_obj = obj;
     double err = tol + 1;
     int iternum = 0;
@@ -96,6 +100,8 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
       ab[0] += eta * Step(0);
       ab[1] += eta * Step(1);
 
+      a = ab[0];
+      b = ab[1];
       A = a + Sx;
       B = b + mj;
       old_obj = obj;
@@ -108,5 +114,8 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
 
   }
 
-  return(ab);
+  return Rcpp::List::create(Rcpp::Named("a") = ab[0],
+                            Rcpp::Named("b") = ab[1],
+                            Rcpp::Named("obj") = obj);
+
 }
