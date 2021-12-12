@@ -40,7 +40,6 @@ empb_beta_binomial_c = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, meth
   #############################################################################
   # Initialize values:
   STg = cbind(Sg, Tg)
-  ab = c(1, 1)
 
   #############################################################################
   # If data (df$x) are all zeros, then return(0, mean(Ng)):
@@ -60,7 +59,7 @@ empb_beta_binomial_c = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, meth
 
   #############################################################################
   # Run hard-capped Newton's method algorithm:
-  ab = empb_beta_binomial_c_loop(ab = ab, G = Lg, Sg = Sg, Tg = Tg, Ng = Ng, eta = eta, tol = tol, maxIter = maxIter, method = as.numeric(method != 'newton'))
+  ab = empb_beta_binomial_c_loop(G = Lg, Sg = Sg, Tg = Tg, Ng = Ng, eta = eta, tol = tol, maxIter = maxIter, method = as.numeric(method != 'newton'))
 
   #############################################################################
   # Return empirical Bayes a, b:
