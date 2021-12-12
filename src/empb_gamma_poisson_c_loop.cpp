@@ -44,10 +44,10 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
       Score(0) = G * (log(b) - digamma(NumericVector(1, a))[0]) + sum(digamma(A) - log(B));
       Score(1) = G * a / b - sum(A / B);
 
-      Hessian(0, 0) =
-      Hessian(1, 1) =
-      Hessian(0, 1) =
-      Hessian(1, 0) =
+      Hessian(0, 0) = sum(trigamma(A)) - G * trigamma(NumericVector(1, a))[0];
+      Hessian(1, 1) = sum(A / (B * B)) - G * a / (b * b);
+      Hessian(0, 1) = G / b - sum(1 / B);
+      Hessian(1, 0) = Hessian(0, 1);
 
       Step = -solve(Hessian, Score);
       ab[0] += eta * Step(0);
