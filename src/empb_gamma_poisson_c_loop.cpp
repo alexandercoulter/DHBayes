@@ -11,7 +11,7 @@ using namespace Rcpp;
 NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
                                         const double& G,
                                         const NumericVector& Sx,
-                                        const NumericVector& mj
+                                        const NumericVector& mj,
                                         const double& eta,
                                         const double& tol,
                                         const int maxIter,
@@ -31,6 +31,7 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
     NumericVector B = b + mj;
 
     double obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
+    double old_obj = obj;
     double err = tol + 1;
     int iternum = 0;
 
@@ -53,6 +54,12 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
       ab[0] += eta * Step(0);
       ab[1] += eta * Step(1);
 
+      A = a + Sx;
+      B = b + mj;
+      old_obj = obj;
+      obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
+      err = obj - old_obj;
+
       ++iternum;
 
     }
@@ -71,6 +78,7 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
     NumericVector B = b + mj;
 
     double obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
+    double old_obj = obj;
     double err = tol + 1;
     int iternum = 0;
 
@@ -87,6 +95,12 @@ NumericVector empb_gamma_poisson_c_loop(NumericVector ab,
       Step = Score;
       ab[0] += eta * Step(0);
       ab[1] += eta * Step(1);
+
+      A = a + Sx;
+      B = b + mj;
+      old_obj = obj;
+      obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
+      err = obj - old_obj;
 
       ++iternum;
 
