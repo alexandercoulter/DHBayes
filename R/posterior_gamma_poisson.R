@@ -24,7 +24,7 @@ posterior_gamma_poisson = function(df, ab_prior = NULL, dist = c('post', 'pred')
   #############################################################################
   # If 'ab_prior' is NULL, then calculate prior a, b parameters from empirical Bayes; otherwise, extract them:
   if(is.null(ab_prior)){
-    ab = empb_gamma_poisson(df = df, ...)
+    ab = empb_gamma_poisson_c(df = df, ...)
     a = ab$a
     b = ab$b
   } else {
