@@ -92,8 +92,8 @@ NumericVector empb_beta_binomial_c_loop(const double& G,
 
       digaORb = digamma(ab);
       diab = digamma(NumericVector(1, sum(ab)))[0];
-      digS = sum(digamma(Sg + ab[0]);
-      digT = sum(digamma(Tg + ab[1]);
+      digS = sum(digamma(Sg + ab[0]));
+      digT = sum(digamma(Tg + ab[1]));
       digN = sum(digamma(Ng + sum(ab)));
 
       Score(0) = G * (diab - digaORb[0]) + digS - digN;
