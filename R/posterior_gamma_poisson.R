@@ -52,6 +52,10 @@ posterior_gamma_poisson = function(df, ab_prior = NULL, dist = c('post', 'pred')
   b. = b + Mg
 
   #############################################################################
+  # Get distribution to sample from:
+  dist = match.arg(dist)
+
+  #############################################################################
   # If 'dist' is 'post' (for 'posterior distribution'), then generate samples from posterior distribution; otherwise, if 'dist' is 'pred' (for 'posterior predictive distribution'), then generate samples from that:
   if(dist == 'post'){
 
