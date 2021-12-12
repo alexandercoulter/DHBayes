@@ -56,9 +56,22 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
   }
 
   #############################################################################
+  # Calculate group-level data for posterior parameters:
+  unique.g = sort(unique(df$'g'))
+  Lg = length(unique.g)
+  Ng = Sg = Tg = rep(0, length(unique.g))
+  for(j in 1:Lg){
+
+    Sg[j] = sum(df$x[df$g == unique.g[j]])
+    Ng[j] = sum(df$n[df$g == unique.g[j]])
+    Tg[j] = Ng[j] - Sg[j]
+
+  }
+
+  #############################################################################
   # Calculate posterior parameter values:
-  a. = a + sum(df$x)
-  b. = b + sum(df$n) - (a. - a)
+  a. = a + Sg
+  b. = b + Tg
 
   #############################################################################
   # If 'dist' is 'post' (for 'posterior distribution'), then generate samples from posterior distribution; otherwise, if 'dist' is 'pred' (for 'posterior predictive distribution'), then generate samples from that:
@@ -80,7 +93,7 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
 
   }
 
-  ###########################################################################
+  #############################################################################
   # Set X to a matrix and set its names to group IDs:
   X = matrix(X, nrow = Nsamp, byrow = TRUE)
   colnames(X) = sort(unique(df$'g'))
