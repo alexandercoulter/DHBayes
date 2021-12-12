@@ -22,7 +22,7 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, method
 
   #############################################################################
   # Calculate parameters, starting points for optimizer:
-  ug = unique(df$g)
+  unique.g = sort(unique(df$'g'))
   Lg = length(ug)
   Ng = Sg = Tg = rep(0, length(ug))
   for(j in 1:Lg){
