@@ -83,7 +83,7 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
   ###########################################################################
   # Set X to a matrix and set its names to group IDs:
   X = matrix(X, nrow = Nsamp, byrow = TRUE)
-  names(X) = sort(unique(df$'g'))
+  colnames(X) = sort(unique(df$'g'))
 
   #############################################################################
   # Return samples:
