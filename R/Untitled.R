@@ -1,4 +1,3 @@
-#' @importFrom Rcpp evalCpp
-#' @useDynLib package_name, .registration = TRUE
-#' @exportPattern "^[[:alpha:]]+"
+#' @importFrom Rcpp sourceCpp
+#' @useDynLib DHBayes
 NULL
