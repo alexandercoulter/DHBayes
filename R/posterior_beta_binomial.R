@@ -58,9 +58,9 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
   #############################################################################
   # Calculate group-level data for posterior parameters:
   unique.g = sort(unique(df$'g'))
-  Lg = length(unique.g)
-  Ng = Sg = Tg = rep(0, length(unique.g))
-  for(j in 1:Lg){
+  G = length(unique.g)
+  Ng = Sg = Tg = rep(0, G)
+  for(j in 1:G){
 
     Sg[j] = sum(df$x[df$g == unique.g[j]])
     Ng[j] = sum(df$n[df$g == unique.g[j]])
@@ -79,7 +79,7 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
 
     ###########################################################################
     # Generate samples:
-    X = rbeta(n = Nsamp * length(unique.g),
+    X = rbeta(n = Nsamp * G,
               shape1 = a.,
               shape2 = b.)
 
@@ -87,8 +87,8 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
 
     ###########################################################################
     # Generate samples:
-    X = rbinom(n = Nsamp * length(unique.g),
-               size = rep(pred_n, length.out = Nsamp * length(unique.g)),
+    X = rbinom(n = Nsamp * G,
+               size = rep(pred_n, length.out = Nsamp * G),
                prob = X)
 
   }
@@ -96,7 +96,7 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
   #############################################################################
   # Set X to a matrix and set its names to group IDs:
   X = matrix(X, nrow = Nsamp, byrow = TRUE)
-  colnames(X) = sort(unique(df$'g'))
+  colnames(X) = unique.g
 
   #############################################################################
   # Return samples:
