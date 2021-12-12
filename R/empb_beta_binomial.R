@@ -64,7 +64,7 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, method
 
     ###########################################################################
     # Calculate Score vector:
-    Score = Lg * (digamma(sum(ab)) - digamma(ab)) + colSums(digamma(ab + STg) - digamma(sum(ab) + Ng))
+    Score = Lg * (digamma(sum(ab)) - digamma(ab)) + colSums(digamma(matrix(ab, ncol = 2, nrow = Lg, byrow = TRUE) + STg) - digamma(sum(ab) + Ng))
 
     ###########################################################################
     # If/else on method input: if 'newton', perform Newton's method; if 'gdescent', perform gradient descent:
@@ -73,7 +73,7 @@ empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, method
       #########################################################################
       # Calculate Hessian matrix:
       Hessian[ , ] = Lg * trigamma(sum(ab)) - sum(trigamma(sum(ab) + Ng))
-      Hessian[c(1, 4)] = Hessian[c(1, 4)] - Lg * trigamma(ab) + colSums(trigamma(ab + STg))
+      Hessian[c(1, 4)] = Hessian[c(1, 4)] - Lg * trigamma(ab) + colSums(trigamma(matrix(ab, ncol = 2, nrow = Lg, byrow = TRUE) + STg))
 
       #########################################################################
       # Set step:
