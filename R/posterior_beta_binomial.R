@@ -1,14 +1,11 @@
 #' posterior_beta_binomial
 #'
 #' @param df data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), 'n' containing non-negative integer values (number of trials), and 'g' containing group labels.
-#' @param ab_prior
-#' @param dist
-#' @param Nsamp
-#' @param eta positive numeric dampening parameter for Newton's method, gradient descent algorithm.
-#' @param tol non-negative numeric tolerance parameter for exiting optimization algorithm.
-#' @param maxIter positive integer setting maximum number of iterations for optimization algorithm.
-#' @param method string controlling optimization method; default 'newton'.
-
+#' @param ab_prior length-2, positive numeric vector specifying prior hyperparameter values for a, b; if NULL, values fit by empirical Bayes.
+#' @param dist string specifying what type of samples to return: either 'post' (for samples from the posterior distribution), or 'pred' (for samples from the posterior-predictive distribution).
+#' @param Nsamp positive integer, number of samples to generate per group.
+#' @param pred_n positive integer, of length 1 or length equal to number of unique elements in df$g: 'size' of binomial samples if generating samples from posterior-predictive distribution.
+#' @param ... optional parameters to be passed to control EMPB convergence, in the case 'ab_prior' is NULL; see 'empb_beta_binomial'.
 #'
 #' @return list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ binom(p_g, df$n), and p_g ~ beta(a, b), where 'p_g' denotes a group-level parameter.
 #' @export
@@ -52,6 +49,8 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
     a = ab$a
     b = ab$b
   } else {
+    # ab_prior must be length 2, positive:
+    if((length(ab_prior) != 2) | any(ab_prior < 0)) stop('If specifying \'ab_prior\', must be a length-2, strictly positive numeric vector.')
     a = ab_prior[1]
     b = ab_prior[2]
   }
