@@ -64,7 +64,7 @@ arma::colvec empb_beta_binomial_c_loop(arma::colvec& ab,
 
   } else {
 
-    arma::colvec Score;
+    arma::colvec Score(2);
     arma::colvec Step = ab;
 
     double digS;
