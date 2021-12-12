@@ -66,7 +66,7 @@ empb_gamma_poisson_c = function(df, eta = 1, tol = 1e-10, maxIter = 10000, start
   a = ab[1]
   b = ab[2]
 
-  loop_out = empb_gamma_poisson_c_loop(ab = ab, Sx = Sx, mj = mj, eta = eta, tol = tol, maxIter = maxIter, method = as.numeric(method != 'newton'))
+  loop_out = empb_gamma_poisson_c_loop(ab = ab, G = G, Sx = Sx, mj = mj, eta = eta, tol = tol, maxIter = maxIter, method = as.numeric(method != 'newton'))
 
   #############################################################################
   # Return empirical Bayes solutions, a, and b:
