@@ -45,7 +45,7 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
   #############################################################################
   # If 'ab_prior' is NULL, then calculate prior a, b parameters from empirical Bayes; otherwise, extract them:
   if(is.null(ab_prior)){
-    ab = empb_beta_binomial(df = df, ...)
+    ab = empb_beta_binomial_c(df = df, ...)
     a = ab$a
     b = ab$b
   } else {
