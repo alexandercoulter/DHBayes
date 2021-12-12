@@ -75,22 +75,14 @@ posterior_beta_binomial = function(df, ab_prior = NULL, dist = c('post', 'pred')
 
   #############################################################################
   # If 'dist' is 'post' (for 'posterior distribution'), then generate samples from posterior distribution; otherwise, if 'dist' is 'pred' (for 'posterior predictive distribution'), then generate samples from that:
-  if(dist == 'post'){
+  X = rbeta(n = Nsamp * G,
+            shape1 = a.,
+            shape2 = b.)
 
-    ###########################################################################
-    # Generate samples:
-    X = rbeta(n = Nsamp * G,
-              shape1 = a.,
-              shape2 = b.)
-
-  } else {
-
-    ###########################################################################
-    # Generate samples:
+  if(dist == 'pred'){
     X = rbinom(n = Nsamp * G,
                size = rep(pred_n, length.out = Nsamp * G),
                prob = X)
-
   }
 
   #############################################################################
