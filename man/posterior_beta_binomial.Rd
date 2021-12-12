@@ -16,7 +16,7 @@ posterior_beta_binomial(
 \arguments{
 \item{df}{data.frame object, containing at least columns named 'x' containing non-negative integer values (number of successes), 'n' containing non-negative integer values (number of trials), and 'g' containing group labels.}
 
-\item{ab_prior}{length-2, positive numeric vector specifying prior hyperparameter values for a, b; if NULL, values fit by empirical Bayes.}
+\item{ab_prior}{length-2, positive numeric vector specifying prior hyperparameter values for a, b; if NULL, values fit by empirical Bayes (EMPB).}
 
 \item{dist}{string specifying what type of samples to return: either 'post' (for samples from the posterior distribution), or 'pred' (for samples from the posterior-predictive distribution).}
 
@@ -27,7 +27,7 @@ posterior_beta_binomial(
 \item{...}{optional parameters to be passed to control EMPB convergence, in the case 'ab_prior' is NULL; see 'empb_beta_binomial'.}
 }
 \value{
-list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters, assuming df$x ~ binom(p_g, df$n), and p_g ~ beta(a, b), where 'p_g' denotes a group-level parameter.
+matrix of samples from the posterior (or posterior-predictive) distribution, where (named) columns are for group IDs included in df$g, and rows are samples; assuming df$x ~ binom(p_g, df$n), and p_g ~ beta(a, b), where 'p_g' denotes a group-level parameter.
 }
 \description{
 posterior_beta_binomial
