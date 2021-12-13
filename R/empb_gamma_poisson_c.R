@@ -13,7 +13,7 @@
 #' @examples
 #' # Hello world
 #' x = 2
-empb_gamma_poisson_c = function(df, eta = 1, tol = 1e-10, maxIter = 10000, starting_ab = NULL, method = c('newton', 'gdescent')){
+empb_gamma_poisson_c = function(df, eta = 1, tol = 1e-8, maxIter = 10000, starting_ab = NULL, method = c('newton', 'gdescent')){
 
   #############################################################################
   # Object 'df' should be 'data.frame', with columns 'x' and 'g'.  To that end:
@@ -58,7 +58,9 @@ empb_gamma_poisson_c = function(df, eta = 1, tol = 1e-10, maxIter = 10000, start
   #############################################################################
   # Give initial values for iterator:
   if(is.null(starting_ab)){
-    ab = c(1, 1)
+    msx = mean(Sx)
+    vsx = var(Sx)
+    ab = pmax(c(msx * msx / vsx, msx / vsx), 2)
   } else {
     if((length(starting_ab) != 2) | any(starting_ab <= 0)) stop('Vector of starting estimate \'starting_ab\' must have two positive numbers or otherwise be NULL.')
     ab = starting_ab
