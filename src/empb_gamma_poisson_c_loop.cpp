@@ -8,7 +8,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
+Rcpp::List empb_gamma_poisson_c_loop(NumericVector& ab,
                                      const double& G,
                                      const NumericVector& Sx,
                                      const NumericVector& mj,
