@@ -39,11 +39,6 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
 
     while((abs(err) > tol) && (iternum < maxIter)){
 
-      a = ab[0];
-      b = ab[1];
-      A = a + Sx;
-      B = b + mj;
-
       Score(0) = G * (log(b) - digamma(NumericVector(1, a))[0]) + sum(digamma(A) - log(B));
       Score(1) = G * a / b - sum(A / B);
 
@@ -87,11 +82,6 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
     int iternum = 0;
 
     while((abs(err) > tol) && (iternum < maxIter)){
-
-      a = ab[0];
-      b = ab[1];
-      A = a + Sx;
-      B = b + mj;
 
       Score(0) = G * (log(b) - digamma(NumericVector(1, a))[0]) + sum(digamma(A) - log(B));
       Score(1) = G * a / b - sum(A / B);
