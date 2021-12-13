@@ -18,19 +18,18 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
                                      int method) {
 
   double obj = 0;
+  arma::colvec Score(2);
+  arma::colvec Step(2);
+  double a = ab[0];
+  double b = ab[1];
+  NumericVector aNV(1);
+  aNV = a;
+  NumericVector A = a + Sx;
+  NumericVector B = b + mj;
 
   if(method == 0){
 
     arma::mat Hessian(2, 2);
-    NumericVector digaORb(2);
-    NumericVector trigaORb(2);
-
-    arma::colvec Score(2);
-    arma::colvec Step(2);
-    double a = ab[0];
-    double b = ab[1];
-    NumericVector A = a + Sx;
-    NumericVector B = b + mj;
 
     obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
     double old_obj = obj;
@@ -39,10 +38,12 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
 
     while((abs(err) > tol) && (iternum < maxIter)){
 
-      Score(0) = G * (log(b) - digamma(NumericVector(1, a))[0]) + sum(digamma(A) - log(B));
+      aNV = a;
+
+      Score(0) = G * (log(b) - digamma(aNV)[0]) + sum(digamma(A) - log(B));
       Score(1) = G * a / b - sum(A / B);
 
-      Hessian(0, 0) = sum(trigamma(A)) - G * trigamma(NumericVector(1, a))[0];
+      Hessian(0, 0) = sum(trigamma(A)) - G * trigamma(aNV)[0];
       Hessian(1, 1) = sum(A / (B * B)) - G * a / (b * b);
       Hessian(0, 1) = G / b - sum(1 / B);
       Hessian(1, 0) = Hessian(0, 1);
@@ -65,17 +66,6 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
 
   } else {
 
-    arma::mat Hessian(2, 2);
-    NumericVector digaORb(2);
-    NumericVector trigaORb(2);
-
-    arma::colvec Score(2);
-    arma::colvec Step(2);
-    double a = ab[0];
-    double b = ab[1];
-    NumericVector A = a + Sx;
-    NumericVector B = b + mj;
-
     obj = G * (a * log(b) - lgamma(a)) + sum(lgamma(A) - A * log(B));
     double old_obj = obj;
     double err = tol + 1;
@@ -83,7 +73,9 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
 
     while((abs(err) > tol) && (iternum < maxIter)){
 
-      Score(0) = G * (log(b) - digamma(NumericVector(1, a))[0]) + sum(digamma(A) - log(B));
+      aNV = a;
+
+      Score(0) = G * (log(b) - digamma(aNV)[0]) + sum(digamma(A) - log(B));
       Score(1) = G * a / b - sum(A / B);
 
       Step = Score;
@@ -104,8 +96,8 @@ Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab,
 
   }
 
-  return Rcpp::List::create(Rcpp::Named("a") = ab[0],
-                            Rcpp::Named("b") = ab[1],
+  return Rcpp::List::create(Rcpp::Named("a") = a,
+                            Rcpp::Named("b") = b,
                             Rcpp::Named("obj") = obj);
 
 }
