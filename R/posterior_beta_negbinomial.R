@@ -24,7 +24,7 @@ posterior_beta_negbinomial = function(df, rab_prior = NULL, dist = c('post', 'pr
   #############################################################################
   # If 'rab_prior' is NULL, then calculate prior r, a, and b parameters from empirical Bayes; otherwise, extract them:
   if(is.null(rab_prior)){
-    rab = empb_beta_negbinomial(df = df, ...)
+    rab = empb_beta_negbinomial_c(df = df, ...)
     r = rab$r
     a = rab$a
     b = rab$b
