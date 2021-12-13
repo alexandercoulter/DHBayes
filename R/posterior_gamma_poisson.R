@@ -19,7 +19,6 @@ posterior_gamma_poisson = function(df, ab_prior = NULL, dist = c('post', 'pred')
   if(class(df) != 'data.frame') stop('Object \'df\' should be of type \'data.frame\'.')
   if(!all(c('x', 'g') %in% names(df))) stop('Object \'df\' must contain data.frame columns named \'x\' and \'g\'.')
   if(length(df$x) != length(df$g)) stop('Object \'df\' data.frame columns are not of same length.')
-  unique.g = sort(unique(df$'g'))
 
   #############################################################################
   # If 'ab_prior' is NULL, then calculate prior a, b parameters from empirical Bayes; otherwise, extract them:
@@ -39,10 +38,13 @@ posterior_gamma_poisson = function(df, ab_prior = NULL, dist = c('post', 'pred')
   unique.g = sort(unique(df$'g'))
   G = length(unique.g)
   Sx = Mg = rep(0, G)
+  x = df$x
+  g = df$g
 
   for(j in 1:G){
-    Sx[j] = sum(df$x[df$g == unique.g[j]])
-    Mg[j] = sum(df$g == unique.g[j])
+    d = x[g == unique.g[j]]
+    Sx[j] = sum(d)
+    Mg[j] = length(d)
   }
 
   #############################################################################
