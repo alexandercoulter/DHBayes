@@ -21,10 +21,10 @@ posterior_gamma_poisson(
 
 \item{Nsamp}{positive integer, number of samples to generate per group.}
 
-\item{...}{optional parameters to be passed to control EMPB convergence, in the case 'ab_prior' is NULL; see 'empb_gamma_poisson'.}
+\item{...}{optional parameters to be passed to control EMPB convergence, in the case 'ab_prior' is NULL; see 'empb_gamma_poisson' or 'empb_gamma_poisson_c'.}
 }
 \value{
-matrix of samples from the posterior (or posterior-predictive) distribution, where (named) columns are for group IDs included in df$g, and rows are samples; assuming df$x ~ binom(p_g, df$n), and p_g ~ beta(a, b), where 'p_g' denotes a group-level parameter.
+matrix of samples from the posterior (or posterior-predictive) distribution, where (named) columns are for group IDs included in df$g, and rows are samples; assuming df$x ~ poisson(L_g), and L_g ~ gamma(a, b), where 'L_g' denotes a group-level parameter.
 }
 \description{
 posterior_gamma_poisson
