@@ -7,7 +7,7 @@
 empb_gamma_poisson_c(
   df,
   eta = 1,
-  tol = 1e-10,
+  tol = 1e-08,
   maxIter = 10000,
   starting_ab = NULL,
   method = c("newton", "gdescent")

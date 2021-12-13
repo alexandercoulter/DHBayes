@@ -49,15 +49,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // empb_gamma_poisson_c_loop
-Rcpp::List empb_gamma_poisson_c_loop(NumericVector ab, const double& G, const NumericVector& Sx, const NumericVector& mj, const double& eta, const double& tol, const int maxIter, int method);
+Rcpp::List empb_gamma_poisson_c_loop(NumericVector& ab, const double& G, const arma::colvec& Sx, const arma::colvec& mj, const double& eta, const double& tol, const int maxIter, int method);
 RcppExport SEXP _DHBayes_empb_gamma_poisson_c_loop(SEXP abSEXP, SEXP GSEXP, SEXP SxSEXP, SEXP mjSEXP, SEXP etaSEXP, SEXP tolSEXP, SEXP maxIterSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type ab(abSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type ab(abSEXP);
     Rcpp::traits::input_parameter< const double& >::type G(GSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type Sx(SxSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type mj(mjSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type Sx(SxSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type mj(mjSEXP);
     Rcpp::traits::input_parameter< const double& >::type eta(etaSEXP);
     Rcpp::traits::input_parameter< const double& >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< const int >::type maxIter(maxIterSEXP);
