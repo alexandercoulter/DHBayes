@@ -55,12 +55,6 @@ empb_beta_negbinomial_c = function(df, eta = 1, tol = 1e-8, maxIter = 10000, sta
   method = match.arg(method)
 
   #############################################################################
-  # Initialize empty objects for WHILE loop:
-  Score  = rep(NA, 3)
-  Hessian = matrix(NA, 3, 3)
-  iternum = 0
-
-  #############################################################################
   # Give initial values for iterator:
   if(is.null(starting_rab)){
     rab = c(1, 1, 1)
