@@ -34,13 +34,14 @@ empb_gamma_poisson_c = function(df, eta = 1, tol = 1e-10, maxIter = 10000, start
   unique.g = sort(unique(df$'g'))
   G = length(unique.g)
   Sx = mj = rep(NA, G)
-  x = df$'x'
+  x = df$x
+  g = df$g
 
   #############################################################################
   # Set useful values for calculations, like within-group sums and sample sizes:
   for(j in 1:G){
 
-    d = x[df$'g' == unique.g[j]]
+    d = x[g == unique.g[j]]
     Sx[j] = sum(d)
     mj[j] = length(d)
 
@@ -57,20 +58,19 @@ empb_gamma_poisson_c = function(df, eta = 1, tol = 1e-10, maxIter = 10000, start
   #############################################################################
   # Give initial values for iterator:
   if(is.null(starting_ab)){
-    ab = c(mean(Sx / mj)^2 / var(Sx / mj),
-           mean(Sx / mj) / var(Sx / mj))
+    ab = c(1, 1)
   } else {
     if((length(starting_ab) != 2) | any(starting_ab <= 0)) stop('Vector of starting estimate \'starting_ab\' must have two positive numbers or otherwise be NULL.')
     ab = starting_ab
   }
-  a = ab[1]
-  b = ab[2]
 
   loop_out = empb_gamma_poisson_c_loop(ab = ab, G = G, Sx = Sx, mj = mj, eta = eta, tol = tol, maxIter = maxIter, method = as.numeric(method != 'newton'))
 
   #############################################################################
   # Return empirical Bayes solutions, a, and b:
-  return(list('a' = loop_out$a, 'b' = loop_out$b, 'obj' = loop_out$obj))
+  return(list('a' = loop_out$a,
+              'b' = loop_out$b,
+              'obj' = loop_out$obj))
 
 }
 
