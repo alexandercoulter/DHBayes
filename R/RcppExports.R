@@ -5,6 +5,10 @@ empb_beta_binomial_c_loop <- function(G, Sg, Tg, Ng, eta, tol, maxIter, method) 
     .Call('_DHBayes_empb_beta_binomial_c_loop', PACKAGE = 'DHBayes', G, Sg, Tg, Ng, eta, tol, maxIter, method)
 }
 
+empb_beta_negbinomial_c_loop <- function(rab, X, G, Sx, mj, eta, tol, maxIter, method) {
+    .Call('_DHBayes_empb_beta_negbinomial_c_loop', PACKAGE = 'DHBayes', rab, X, G, Sx, mj, eta, tol, maxIter, method)
+}
+
 empb_gamma_poisson_c_loop <- function(ab, G, Sx, mj, eta, tol, maxIter, method) {
     .Call('_DHBayes_empb_gamma_poisson_c_loop', PACKAGE = 'DHBayes', ab, G, Sx, mj, eta, tol, maxIter, method)
 }
