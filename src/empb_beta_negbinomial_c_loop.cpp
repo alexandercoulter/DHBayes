@@ -8,7 +8,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-Rcpp::List empb_beta_negbinomial_c_loop(NumericVector rab,
+Rcpp::List empb_beta_negbinomial_c_loop(NumericVector& rab,
                                         const NumericVector& X,
                                         const double& G,
                                         const NumericVector& Sx,
@@ -18,15 +18,45 @@ Rcpp::List empb_beta_negbinomial_c_loop(NumericVector rab,
                                         const int maxIter,
                                         int method) {
 
+  Rcout << "rab : \n" << rab << "\n";
+  Rcout << "rab[0] : \n" << rab[0] << "\n";
+  Rcout << "rab(0) : \n" << rab(0) << "\n";
+  Rcout << "rab : \n" << rab << "\n";
+  Rcout << "rab : \n" << rab << "\n";
   NumericVector mj2 = mj * mj;
   double Sm = sum(mj);
   double obj = 0;
-  NumericVector r = rab[0];
-  NumericVector a = rab[0];
-  NumericVector b = rab[1];
-  NumericVector R = r + X;
-  NumericVector A = a + mj * r;
-  NumericVector B = b + Sx;
+  double r = rab[0];
+  double a = rab[1];
+  double b = rab[2];
+  NumericVector rNV(1);
+  NumericVector aNV(1);
+  NumericVector bNV(1);
+  rNV = r;
+  aNV = a;
+  bNV = b;
+  NumericVector R(X.size());
+  NumericVector A(G);
+  NumericVector B(G);
+
+  Rcout << "A : \n" << A << "\n";
+  Rcout << "B : \n" << B << "\n";
+  Rcout << "R : \n" << R << "\n";
+
+  Rcout << "a : \n" << a << "\n";
+  Rcout << "b : \n" << b << "\n";
+  Rcout << "rr : \n" << r << "\n";
+
+  Rcout << "X : \n" << X << "\n";
+  Rcout << "mj : \n" << mj << "\n";
+  R = r + X;
+  A = a + mj * r;
+  B = b + Sx;
+
+  Rcout << "A : \n" << A << "\n";
+  Rcout << "B : \n" << B << "\n";
+  Rcout << "R : \n" << R << "\n";
+
 
   if(method == 0){
 
@@ -56,12 +86,16 @@ Rcpp::List empb_beta_negbinomial_c_loop(NumericVector rab,
     NumericVector digR(G);
     NumericVector trigR(G);
 
-    obj = sum(lgamma(A) + lgamma(B) - lgamma(A + B)) + sum(lgamma(R)) - G * (lgamma(a[0]) + lgamma(b[0]) - lgamma(a[0] + b[0])) - Sm * lgamma(r[0]);
+    obj = sum(lgamma(A) + lgamma(B) - lgamma(A + B)) + sum(lgamma(R)) - G * (lgamma(a) + lgamma(b) - lgamma(a + b)) - Sm * lgamma(r);
     double old_obj = obj;
     double err = tol + 1;
     int iternum = 0;
 
     while((abs(err) > tol) && (iternum < maxIter)){
+
+      rNV = r;
+      aNV = a;
+      bNV = b;
 
       digA = digamma(A);
       digB = digamma(B);
@@ -76,25 +110,25 @@ Rcpp::List empb_beta_negbinomial_c_loop(NumericVector rab,
       sum_b_digamma = sum(digB - digAB);
       sum_ma_digamma = sum(mj * (digA - digAB));
       sum_x_digamma = sum(digR);
-      digamma_gaab = G * (digamma(a) - digamma(a + b))[0];
-      digamma_gbab = G * (digamma(b) - digamma(a + b))[0];
+      digamma_gaab = G * (digamma(aNV) - digamma(aNV + bNV))[0];
+      digamma_gbab = G * (digamma(bNV) - digamma(aNV + bNV))[0];
       sum_a_trigamma = sum(trigA - trigAB);
       sum_b_trigamma = sum(trigB - trigAB);
       sum_ma_trigamma = sum(mj2 * (trigA - trigAB));
       sum_x_trigamma = sum(trigR);
-      trigamma_gaab = G * (trigamma(a) - trigamma(a + b))[0];
-      trigamma_gbab = G * (trigamma(b) - trigamma(a + b))[0];
+      trigamma_gaab = G * (trigamma(aNV) - trigamma(aNV + bNV))[0];
+      trigamma_gbab = G * (trigamma(bNV) - trigamma(aNV + bNV))[0];
 
-      Score(0) = NULL;
-      Score(1) = NULL;
-      Score(2) = NULL;
+      Score(0) = sum_ma_digamma + sum_x_digamma - Sm * digamma(rNV)[0];
+      Score(1) = sum_a_digamma - digamma_gaab;
+      Score(2) = sum_b_digamma - digamma_gbab;
 
-      Hessian(0, 0) = NULL;
-      Hessian(1, 1) = NULL;
-      Hessian(2, 2) = NULL;
-      Hessian(0, 1) = NULL;
-      Hessian(0, 2) = NULL;
-      Hessian(1, 2) = NULL;
+      Hessian(0, 0) = sum_ma_trigamma + sum_x_trigamma - Sm * trigamma(rNV)[0];
+      Hessian(1, 1) = sum_a_trigamma - trigamma_gaab;
+      Hessian(2, 2) = sum_b_trigamma - trigamma_gbab;
+      Hessian(0, 1) = sum(mj * (trigA - trigAB));
+      Hessian(0, 2) = -sum(mj * trigAB);
+      Hessian(1, 2) = G * trigamma(aNV + bNV)[0] - sum(trigAB);
 
       Hessian(1, 0) = Hessian(0, 1);
       Hessian(2, 0) = Hessian(0, 2);
@@ -104,7 +138,6 @@ Rcpp::List empb_beta_negbinomial_c_loop(NumericVector rab,
       rab[0] += eta * Step(0);
       rab[1] += eta * Step(1);
       rab[2] += eta * Step(2);
-
 
       r = rab[0];
       a = rab[1];
@@ -123,20 +156,47 @@ Rcpp::List empb_beta_negbinomial_c_loop(NumericVector rab,
 
   } else {
 
-    arma::mat Hessian(3, 3);
     arma::colvec Score(3);
     arma::colvec Step(3);
 
-    obj = NULL;
+    double sum_a_digamma;
+    double sum_b_digamma;
+    double sum_ma_digamma;
+    double sum_x_digamma;
+    double digamma_gaab;
+    double digamma_gbab;
+
+    NumericVector digA(G);
+    NumericVector digB(G);
+    NumericVector digAB(G);
+    NumericVector digR(G);
+
+    obj = sum(lgamma(A) + lgamma(B) - lgamma(A + B)) + sum(lgamma(R)) - G * (lgamma(a) + lgamma(b) - lgamma(a + b)) - Sm * lgamma(r);
     double old_obj = obj;
     double err = tol + 1;
     int iternum = 0;
 
     while((abs(err) > tol) && (iternum < maxIter)){
 
-      Score(0) = NULL;
-      Score(1) = NULL;
-      Score(2) = NULL;
+      rNV = r;
+      aNV = a;
+      bNV = b;
+
+      digA = digamma(A);
+      digB = digamma(B);
+      digAB = digamma(A + B);
+      digR = digamma(R);
+
+      sum_a_digamma = sum(digA - digAB);
+      sum_b_digamma = sum(digB - digAB);
+      sum_ma_digamma = sum(mj * (digA - digAB));
+      sum_x_digamma = sum(digR);
+      digamma_gaab = G * (digamma(aNV) - digamma(aNV + bNV))[0];
+      digamma_gbab = G * (digamma(bNV) - digamma(aNV + bNV))[0];
+
+      Score(0) = sum_ma_digamma + sum_x_digamma - Sm * digamma(rNV)[0];
+      Score(1) = sum_a_digamma - digamma_gaab;
+      Score(2) = sum_b_digamma - digamma_gbab;
 
       Step = Score;
       rab[0] += eta * Step(0);
