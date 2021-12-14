@@ -10,8 +10,38 @@
 #' @export
 #'
 #' @examples
-#' # Hello world
-#' x = 2
+#' # Generate example data:
+#' set.seed(31)
+#' r = 4
+#' a = 3
+#' b = 9
+#'
+#' # Number of groups:
+#' NG = 10
+#'
+#' # Creating group IDs:
+#' g = replicate(NG, paste(sample(LETTERS, 10), sep="", collapse=""))
+#'
+#' # Generating 'true' p parameters:
+#' p = rbeta(length(g), a, b)
+#'
+#' # Number of experiments, i.e. rows in df:
+#' numexps = 100
+#'
+#' # Filling df with pseudo data; note the requisite columns 'x' and 'g':
+#' df = data.frame('x' = numeric(0), 'g' = character(0))
+#' for(k in 1:numexps){
+#'   gk = sample(g, 1)
+#'   xk = rnbinom(1, r, p[g == gk])
+#'   df = rbind(df, data.frame('x' = xk, 'g' = gk))
+#' }
+#'
+#' # Generating 1000 posterior distribution samples for each group:
+#' posterior_values = posterior_beta_negbinomial(df = df, method = 'gdescent')
+#' dim(posterior_values)
+#'
+#' # Create histogram of posterior distribution samples for first group (by alphabetic order):
+#' hist(posterior_values[, 1], main = colnames(posterior_values)[1])
 posterior_beta_negbinomial = function(df, rab_prior = NULL, dist = c('post', 'pred'), Nsamp = 1000, ...){
 
   #############################################################################
