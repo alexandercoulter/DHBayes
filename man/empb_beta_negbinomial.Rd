@@ -6,7 +6,7 @@
 \usage{
 empb_beta_negbinomial(
   df,
-  eta = 1,
+  eta = 0.1,
   tol = 1e-08,
   maxIter = 10000,
   starting_rab = NULL,
@@ -60,7 +60,7 @@ for(k in 1:numexps){
 }
 
 # Generating empirical Bayes (EMPB) solutions for r, a, and b:
-rab_fit = empb_beta_negbinomial(df = df, eta = 0.1, method = 'newton')
+rab_fit = empb_beta_negbinomial(df = df, method = 'gdescent')
 
 # Compare fitted values to known values:
 cbind(c(r, a, b), c(rab_fit$r, rab_fit$a, rab_fit$b))
