@@ -11,8 +11,37 @@
 #' @export
 #'
 #' @examples
-#' # Hello world
-#' x = 2
+#' # Generate example data:
+#' set.seed(31)
+#' r = 4
+#' a = 3
+#' b = 9
+#'
+#' # Number of groups:
+#' NG = 10
+#'
+#' # Creating group IDs:
+#' g = replicate(NG, paste(sample(LETTERS, 10), sep="", collapse=""))
+#'
+#' # Generating 'true' p parameters:
+#' p = rbeta(length(g), a, b)
+#'
+#' # Number of experiments, i.e. rows in df:
+#' numexps = 100
+#'
+#' # Filling df with pseudo data; note the requisite columns 'x' and 'g':
+#' df = data.frame('x' = numeric(0), 'g' = character(0))
+#' for(k in 1:numexps){
+#'   gk = sample(g, 1)
+#'   xk = rnbinom(1, r, p[g == gk])
+#'   df = rbind(df, data.frame('x' = xk, 'g' = gk))
+#' }
+#'
+#' # Generating empirical Bayes (EMPB) solutions for r, a, and b:
+#' rab_fit = empb_beta_negbinomial(df = df, method = 'newton')
+#'
+#' # Compare fitted values to known values:
+#' cbind(c(r, a, b), c(rab_fit$r, rab_fit$a, rab_fit$b))
 empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, starting_rab = NULL, method = c('newton', 'gdescent')){
 
   #############################################################################
