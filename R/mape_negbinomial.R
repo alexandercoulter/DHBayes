@@ -24,7 +24,7 @@
 #' # Filling df with pseudo data; note the requisite column 'x':
 #' df = data.frame('x' = rnbinom(numexps, r, p))
 #'
-#' # Generating maximum a posteriori estimate (MAPE) solution for p:
+#' # Generating maximum a posteriori estimate (MAPE) solution for r and p:
 #' rp_fit = mape_negbinomial(df = df, r_prior = 2, p_prior = 0.5, M_prior = 1)
 #'
 #' # Compare fitted values to known values:
