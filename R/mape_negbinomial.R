@@ -13,9 +13,23 @@
 #' @export
 #'
 #' @examples
-#' # Hello world
-#' x = 2
-mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 1, tol = 0.0001, maxIter = 10000, method = c('newton', 'gdescent')){
+#' # Generate example data:
+#' set.seed(31)
+#' r = 4
+#' p = 0.3
+#'
+#' # Number of experiments, i.e. rows in df:
+#' numexps = 10
+#'
+#' # Filling df with pseudo data; note the requisite column 'x':
+#' df = data.frame('x' = rnbinom(numexps, r, p))
+#'
+#' # Generating maximum a posteriori estimate (MAPE) solution for p:
+#' rp_fit = mape_negbinomial(df = df, r_prior = 2, p_prior = 0.5, M_prior = 1)
+#'
+#' # Compare fitted values to known values:
+#' cbind(c(r, p), c(rp_fit$r, rp_fit$p))
+mape_negbinomial = function(df, r_prior, p_prior, M_prior, eta = 0.1, tol = 0.0001, maxIter = 10000, method = c('newton', 'gdescent')){
 
   #############################################################################
   # Object 'df' should be 'data.frame', with column 'x'.  To that end:
