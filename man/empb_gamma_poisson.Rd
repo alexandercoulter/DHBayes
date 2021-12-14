@@ -33,6 +33,34 @@ list object containing empirical Bayes (EMPB) estimates of a, b hyperparameters,
 empb_gamma_poisson
 }
 \examples{
-# Hello world
-x = 2
+# Generate example data:
+set.seed(31)
+a = 23
+b = 9
+
+# Number of groups:
+NG = 10
+
+# Creating group IDs:
+g = replicate(NG, paste(sample(LETTERS, 10), sep="", collapse=""))
+
+# Generating 'true' L parameters:
+L = rgamma(length(g), a, b)
+
+# Number of experiments, i.e. rows in df:
+numexps = 100
+
+# Filling df with pseudo data; note the requisite columns 'x' and 'g':
+df = data.frame('x' = numeric(0), 'g' = character(0))
+for(k in 1:numexps){
+  gk = sample(g, 1)
+  xk = rpois(1, L[g == gk])
+  df = rbind(df, data.frame('x' = xk, 'g' = gk))
+}
+
+# Generating empirical Bayes (EMPB) solutions for a and b:
+ab_fit = empb_gamma_poisson(df = df)
+
+# Compare fitted values to known values:
+cbind(c(a, b), c(ab_fit$a, ab_fit$b))
 }

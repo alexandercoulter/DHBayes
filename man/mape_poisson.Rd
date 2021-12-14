@@ -20,6 +20,19 @@ numeric, maximum a-posteriori estimate (MAPE) of Poisson parameter L, assuming d
 mape_poisson
 }
 \examples{
-# Hello world
-x = 2
+# Generate example data:
+set.seed(31)
+L = 5
+
+# Number of experiments, i.e. rows in df:
+numexps = 10
+
+# Filling df with pseudo data; note the requisite column 'x':
+df = data.frame('x' = rpois(numexps, L))
+
+# Generating maximum a posteriori estimate (MAPE) solution for L:
+L_fit = mape_poisson(df = df, a_prior = 1, b_prior = 1)
+
+# Compare fitted values to known values:
+cbind(L, L_fit)
 }
