@@ -8,8 +8,23 @@
 #' @export
 #'
 #' @examples
-#' # Hello world
-#' x = 2
+#' # Generate example data:
+#' set.seed(31)
+#' p = 0.3
+#'
+#' # Number of experiments, i.e. rows in df:
+#' numexps = 10
+#'
+#' # Filling df with pseudo data; note the requisite columns 'n' and 'x':
+#' n = 5 + rpois(numexps, 10)
+#' x = rbinom(numexps, n, p)
+#' df = data.frame('n' = n, 'x' = x)
+#'
+#' # Generating maximum a posteriori estimate (MAPE) solution for p:
+#' p_fit = mape_binomial(df = df, a_prior = 1, b_prior = 1)
+#'
+#' # Compare fitted values to known values:
+#' cbind(p, p_fit)
 mape_binomial = function(df, a_prior, b_prior){
 
   #############################################################################
