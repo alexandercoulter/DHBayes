@@ -1,6 +1,6 @@
 Package: DHBayes
 Title: Bayesian Hierarchical Sampler for Discrete (Binomial, Negative-Binomial, Poisson) Data
-Version: 0.1.1
+Version: 1.0.0
 Authors@R: 
     person("Alexander", "Coulter", , "coultera@stat.tamu.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
