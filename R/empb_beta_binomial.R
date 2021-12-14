@@ -37,7 +37,7 @@
 #' }
 #'
 #' # Generating empirical Bayes (EMPB) solutions for a, b:
-#' ab_fit = empb_beta_binomial_c(df = df)
+#' ab_fit = empb_beta_binomial(df = df)
 #'
 #' # Compare fitted values to known values:
 #' cbind(c(a, b), c(ab_fit$a, ab_fit$b))
