@@ -38,7 +38,7 @@
 #' }
 #'
 #' # Generating empirical Bayes (EMPB) solutions for r, a, and b:
-#' rab_fit = empb_beta_negbinomial(df = df, method = 'newton')
+#' rab_fit = empb_beta_negbinomial(df = df, eta = 0.1, method = 'newton')
 #'
 #' # Compare fitted values to known values:
 #' cbind(c(r, a, b), c(rab_fit$r, rab_fit$a, rab_fit$b))
@@ -93,7 +93,7 @@ empb_beta_negbinomial = function(df, eta = 1, tol = 1e-8, maxIter = 10000, start
   #############################################################################
   # Give initial values for iterator:
   if(is.null(starting_rab)){
-    rab = c(1, 1, 1)
+    rab = c(2, 2, 2)
   } else {
     rab = starting_rab
   }
