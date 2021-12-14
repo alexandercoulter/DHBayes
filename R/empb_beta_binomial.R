@@ -10,8 +10,37 @@
 #' @export
 #'
 #' @examples
-#' # Hello world
-#' x = 2
+#' # Generate example data:
+#' set.seed(31)
+#' a = 3
+#' b = 9
+#'
+#' # Number of groups:
+#' NG = 10
+#'
+#' # Creating group IDs:
+#' g = replicate(NG, paste(sample(LETTERS, 10), sep="", collapse=""))
+#'
+#' # Generating 'true' p parameters:
+#' p = rbeta(length(g), a, b)
+#'
+#' # Number of experiments, i.e. rows in df:
+#' numexps = 100
+#'
+#' # Filling df with pseudo data; note the requisite columns 'n', 'x', and 'g':
+#' df = data.frame('n' = numeric(0), 'x' = numeric(0), 'g' = character(0))
+#' for(k in 1:numexps){
+#'   gk = sample(g, 1)
+#'   nk = 5 + rpois(1, 10)
+#'   xk = rbinom(1, nk, p[g == gk])
+#'   df = rbind(df, data.frame('n' = nk, 'x' = xk, 'g' = gk))
+#' }
+#'
+#' # Generating empirical Bayes (EMPB) solutions for a, b:
+#' ab_fit = empb_beta_binomial_c(df = df)
+#'
+#' # Compare fitted values to known values:
+#' cbind(c(a, b), c(ab_fit$a, ab_fit$b))
 empb_beta_binomial = function(df, eta = 0.1, tol = 1e-5, maxIter = 10000, method = c('newton', 'gdescent')){
 
   #############################################################################
